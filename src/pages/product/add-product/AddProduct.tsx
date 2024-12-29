@@ -99,16 +99,16 @@ export default function AddProduct({}: Props) {
         };
         setVariants(updatedVariants);
     }
-    function handleTotalQuantity(e: any){
-        if (e.target.value != -1) {
-            const { name, value } = e.target;
-            setNewProduct((prev) => ({
-                ...prev,
-                [name]: value,
-            }));
-            // handleVariantChange(0, "quantity", value);
-        }
-    }
+    // function handleTotalQuantity(e: any){
+    //     if (e.target.value != -1) {
+    //         const { name, value } = e.target;
+    //         setNewProduct((prev) => ({
+    //             ...prev,
+    //             [name]: value,
+    //         }));
+    //         // handleVariantChange(0, "quantity", value);
+    //     }
+    // }
 
 
     function handleAddNewProduct() {

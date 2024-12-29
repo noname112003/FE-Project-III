@@ -51,6 +51,7 @@ export default function AddVariant({}: Props) {
                     imagePath: "",
                     initialPrice: 0,
                     priceForSale: 0,
+                    quantity: 0,
                 });
             })
             .finally(() => setLoading(false));
