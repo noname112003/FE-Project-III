@@ -1,0 +1,12 @@
+.icon_edit:hover {
+  svg,
+  path {
+    fill: #08f;
+  }
+}
+.icon_remove:hover {
+  svg,
+  path {
+    fill: #ff4d4d;
+  }
+}

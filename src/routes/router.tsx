@@ -27,11 +27,23 @@ import CustomerRoute from "../components/router/CustomerRoute";
 import ProductRoute from "../components/router/ProductRoute";
 import AdminRoute from "../components/router/AdminRoute";
 import AccessDeniedPage from "../pages/AccessDeniedPage.tsx";
+import ForgotPasswordPage from "../pages/login/ForgotPasswordPage.tsx";
+import Login from "../pages/login/Login.tsx"
+import StoreSetting from "../pages/store/StoreSetting.tsx";
+import UpdateOrderPage from "../pages/order/create-order/UpdateOrderPage.tsx";
 
 export const router = createBrowserRouter([
+  // {
+  //   path: "/login",
+  //   element: <LoginPage />
+  // },
   {
     path: "/login",
-    element: <LoginPage />
+    element: <Login/>
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPasswordPage />
   },
   {
     path: "/",
@@ -54,6 +66,10 @@ export const router = createBrowserRouter([
                 element: <OrderListPage />
               },
               {
+                path: ":id/update",
+                element: <UpdateOrderPage />
+              },
+              {
                 path: "create",
                 element: <CreateOrderPage />
               },
@@ -65,7 +81,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "customers",
-            element: <CustomerRoute />,
+            // element: <CustomerRoute />,
             children: [
               {
                 path: "",
@@ -125,7 +141,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "/admin",
-            element: <AdminRoute />,
+            // element: <AdminRoute />,
             children: [
               {
                 path: "user",
@@ -144,6 +160,16 @@ export const router = createBrowserRouter([
               {
                 path: "user/update/:id",
                 element: <UpdateUser />,
+              },
+            ]
+          },
+          {
+            path: "/store",
+            // element: <AdminRoute />,
+            children: [
+              {
+                path: "",
+                element: <StoreSetting />,
               },
             ]
           },

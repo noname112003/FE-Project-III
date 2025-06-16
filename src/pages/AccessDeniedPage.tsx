@@ -10,6 +10,7 @@ const AccessDeniedPage: React.FC = () => {
     };
 
     return (
+
         <Container
             maxWidth="md"
             sx={{

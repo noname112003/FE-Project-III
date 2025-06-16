@@ -1,11 +1,21 @@
 {
+  "compilerOptions": {
+    "target": "esnext",               // Chọn mức độ ECMAScript bạn muốn sử dụng
+    "module": "esnext",               // Sử dụng mô-đun ES6+
+    "moduleResolution": "node",       // Giải quyết mô-đun theo cách Node.js
+    "jsx": "react-jsx",               // Cho phép JSX (dành cho React 17+)
+    "esModuleInterop": true,          // Hỗ trợ import/export mặc định
+    "strict": true,                   // Bật chế độ kiểm tra nghiêm ngặt
+    "skipLibCheck": true,             // Bỏ qua kiểm tra thư viện để tăng tốc biên dịch
+    "forceConsistentCasingInFileNames": true
+  },
   "files": [],
   "references": [
     {
-      "path": "./tsconfig.app.json"
+      "path": "./tsconfig.app.json"   // Tham chiếu tới cấu hình của ứng dụng
     },
     {
-      "path": "./tsconfig.node.json"
+      "path": "./tsconfig.node.json"  // Tham chiếu tới cấu hình của Node.js
     }
   ]
 }

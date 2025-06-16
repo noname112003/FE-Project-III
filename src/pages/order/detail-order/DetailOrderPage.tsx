@@ -57,7 +57,8 @@ export default function DetailOrderPage({ }: Props) {
             {order ? <Box>
               <Typography variant="body1" sx={{ color: '#000' }} mb={1}>Mã đơn hàng: {order.code}</Typography>
               <Typography variant="body1" sx={{ color: '#000' }} mb={1}>Ngày tạo: {formatDate(order.createdOn.toISOString())}</Typography>
-            </Box> : 
+              <Typography variant="body1" sx={{ color: '#000' }} mb={1}>Ngày cập nhật: {formatDate(order.updatedTime.toISOString())}</Typography>
+            </Box> :
             <Box>
               <Skeleton variant="text" />
               <Skeleton variant="text" />

@@ -9,7 +9,6 @@ import {
   TextField, Tooltip,
   Typography
 } from "@mui/material"
-import CustomerPageAppBar from "./CustomerPageAppBar.tsx"
 import MainBox from "../../components/layout/MainBox"
 import SearchIcon from '@mui/icons-material/Search';
 import React, { ChangeEvent, useEffect, useState } from "react";
@@ -19,6 +18,7 @@ import { fetchCustomers, submitNewCustomer } from "../../services/customerAPI.ts
 import { formatCurrency } from "../../utils/formatCurrency.ts";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/layout/Header.tsx";
 
 
 type newCustomer = {
@@ -191,21 +191,24 @@ export default function CustomerPage() {
 
   return (
     <Box>
-      <CustomerPageAppBar />
+      <Header/>
       <MainBox>
-
-        <Box
-          sx={{ padding: '24px' }}
-          display="flex"
-          justifyContent="flex-end"
-          alignItems="center">
-          <Button sx={{
-            backgroundColor: 'primary.main', color: 'white', fontFamily: '"Segoe UI", sans-serif', // Phông chữ
-            fontSize: '14px', // Kích thước chữ
-            fontStyle: 'normal', // Kiểu chữ
-            fontWeight: 600,
-          }} onClick={handleAddCustomerClick}>+ Thêm khách hàng</Button>
+        <Box sx={{display: "flex", justifyContent: "space-between"}}>
+          <Box className="titleHeader">Danh sách khách hàng</Box>
+          <Box
+              sx={{ padding: '20px 30px' }}
+              display="flex"
+              justifyContent="flex-end"
+              alignItems="center">
+            <Button sx={{
+              backgroundColor: 'primary.main', color: 'white', fontFamily: '"Segoe UI", sans-serif', // Phông chữ
+              fontSize: '14px', // Kích thước chữ
+              fontStyle: 'normal', // Kiểu chữ
+              fontWeight: 600,
+            }} onClick={handleAddCustomerClick}>+ Thêm khách hàng</Button>
+          </Box>
         </Box>
+
 
 
 

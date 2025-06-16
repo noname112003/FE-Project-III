@@ -11,7 +11,8 @@ export default class Order {
     cashRepay: number;
     totalPayment: number;
     createdOn: Date;
-    constructor(id: number, code: string, creatorId: string, customerId: number, orderDetails: [], note: string, paymentType: string, totalQuantity: number, totalPayment: number, cashReceive: number, cashRepay: number, createdOn: Date) {
+    updatedTime: Date;
+    constructor(id: number, code: string, creatorId: string, customerId: number, orderDetails: [], note: string, paymentType: string, totalQuantity: number, totalPayment: number, cashReceive: number, cashRepay: number, createdOn: Date, updatedTime: Date) {
         this.id = id;
         this.code = code;
         this.creatorId = creatorId;
@@ -24,9 +25,10 @@ export default class Order {
         this.cashReceive = cashReceive;
         this.cashRepay = cashRepay;
         this.createdOn = createdOn;
+        this.updatedTime = updatedTime;
     }
 
     static fromJson(json: any): Order {
-        return new Order(json.id, json.code, json.creatorId, json.customerId, json.orderDetails, json.note, json.paymentType, json.totalQuantity, json.totalPayment, json.cashReceive, json.cashRepay, new Date(json.createdOn));
+        return new Order(json.id, json.code, json.creatorId, json.customerId, json.orderDetails, json.note, json.paymentType, json.totalQuantity, json.totalPayment, json.cashReceive, json.cashRepay, new Date(json.createdOn), new Date(json.updatedTime));
     }
 }

@@ -28,7 +28,7 @@ interface Role {
 
 const roleMap: { [key: string]: string } = {
   ROLE_ADMIN: "ADMIN (Chủ cửa hàng)",
-  ROLE_REPOSITORY: "NHÂN VIÊN KHO (Quản lý kho)",
+  // ROLE_REPOSITORY: "NHÂN VIÊN KHO (Quản lý kho)",
   ROLE_SALE: "NHÂN VIÊN BÁN HÀNG (Quản lý bán hàng)",
   ROLE_SUPPORT: "NHÂN VIÊN CHĂM SÓC (Chăm sóc khách hàng)",
 };
@@ -56,7 +56,7 @@ export default function DetailUser() {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch(`https://be-project-iii.onrender.com/v1/user/${id}`);
+        const response = await fetch(`http://localhost:8080/v1/user/${id}`);
         const jsonResponse = await response.json();
         if (response.ok) {
           setUser(jsonResponse.data);
@@ -87,7 +87,7 @@ export default function DetailUser() {
     // }
     try {
       const response = await fetch(
-        `https://be-project-iii.onrender.com/v1/admin/reset_password/${id}`,
+        `http://localhost:8080/v1/admin/reset_password/${id}`,
         {
           method: "PUT",
           // headers: {
@@ -109,6 +109,7 @@ export default function DetailUser() {
         toast.error('Mật khẩu không thể khôi phục');
         console.error("Không thể khôi phục password", jsonResponse.message);
       }
+      navigate("/admin/user");
     } catch (error) {
       console.error("Network error", error);
     } finally {
@@ -129,7 +130,7 @@ export default function DetailUser() {
     const updatedStatus = !user.status; // Toggle the current status
 
     try {
-      const response = await fetch(`https://be-project-iii.onrender.com/v1/user/${user.id}`, {
+      const response = await fetch(`http://localhost:8080/v1/user/${user.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -327,7 +328,7 @@ export default function DetailUser() {
           <DialogContent>
             <DialogContentText>
               Bạn có chắc chắn muốn khôi phục mật khẩu cho nhân viên {user.name}{" "}
-              không? Hành động này sẽ gửi một email khôi phục mật khẩu.
+              không?
             </DialogContentText>
           </DialogContent>
           <DialogActions>

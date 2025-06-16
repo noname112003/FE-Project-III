@@ -19,6 +19,7 @@ import { Image } from "@mui/icons-material";
 import { formatCurrency } from "../../../utils/formatCurrency";
 import { getProductById } from "../../../services/productAPI";
 import { formatDate } from "../../../utils/formatDate";
+import {useSelector} from "react-redux";
 
 type Props = {};
 
@@ -28,15 +29,20 @@ export default function ProductDetail({}: Props) {
     const [currentVariant, setCurrentVariant] = useState<VariantResponse>(
         initialVariantResponse
     );
+    const store = useSelector((state: any) => state.storeSetting.store);
+
     const [loading, setLoading] = useState<boolean>(true);
     useEffect(() => {
-        getProductById(id)
-            .then((res) => {
-                setData(res);
-                setCurrentVariant(res.variants[0]);
-            })
-            .finally(() => setLoading(false));
-    }, []);
+        if(store) {
+            getProductById(id, store.id)
+                .then((res) => {
+                    setData(res);
+                    setCurrentVariant(res.variants[0]);
+                })
+                .finally(() => setLoading(false));
+        }
+
+    }, [store]);
 
     if (loading) {
         return (
@@ -336,7 +342,7 @@ export default function ProductDetail({}: Props) {
                                                             }}
                                                         >
                                                             Tồn kho:{" "}
-                                                            {variant.quantity}
+                                                            {variant?.variantStores[0]?.quantity || 0}
                                                         </Typography>
                                                     </Box>
                                                 </Box>

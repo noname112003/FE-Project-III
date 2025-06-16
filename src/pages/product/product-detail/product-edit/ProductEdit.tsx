@@ -29,10 +29,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { getAllCategories } from "../../../../services/categoryAPI";
 import { getProductById, updateProduct } from "../../../../services/productAPI";
 import { getAllBrands } from "../../../../services/brandAPI";
+import {useSelector} from "react-redux";
 
-type Props = {};
 
-export default function ProductDetail({}: Props) {
+
+export default function ProductDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState<ProductRequest>(
@@ -52,6 +53,8 @@ export default function ProductDetail({}: Props) {
     const [variants, setVariants] = useState<VariantRequest[]>([]);
     const [images, setImages] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const store = useSelector((state: any) => state.storeSetting.store);
+
 
     function handleProductChange(e: any) {
         setProduct({ ...product, [e.target.name]: e.target.value });
@@ -59,12 +62,37 @@ export default function ProductDetail({}: Props) {
 
     function handleVariantChange(index: number, field: string, value: string) {
         const updatedVariants = [...variants];
-        updatedVariants[index] = {
-            ...updatedVariants[index],
-            [field]: field === "quantity" ? parseInt(value, 10) || 0 : value,
-        };
+
+        if (field === "variantStore") {
+            // Giả sử mỗi variant có ít nhất một variantStore
+            const updatedVariantStore = [...updatedVariants[index].variantStores];
+            if (updatedVariantStore.length > 0) {
+                updatedVariantStore[0] = {
+                    ...updatedVariantStore[0],
+                    quantity: parseInt(value, 10) || 0,
+                };
+            } else {
+                // Nếu chưa có variantStore, bạn có thể thêm mới nếu cần
+                updatedVariantStore.push({
+                    storeId: store.id, // hoặc storeId tương ứng
+                    quantity: parseInt(value, 10) || 0,
+                });
+            }
+
+            updatedVariants[index] = {
+                ...updatedVariants[index],
+                variantStores: updatedVariantStore,
+            };
+        } else {
+            updatedVariants[index] = {
+                ...updatedVariants[index],
+                [field]: field === "quantity" ? parseInt(value, 10) || 0 : value,
+            };
+        }
+
         setVariants(updatedVariants);
     }
+
 
     function setAllInitialPrices(newInitialPrice: number) {
         const updatedVariants = variants.map((variant) => ({
@@ -132,7 +160,7 @@ export default function ProductDetail({}: Props) {
             ...product,
             variants: variants,
             imagePath: images,
-        })
+        }, store.id)
             .then((_res) => {
                 toast.success("Cập nhật sản phẩm thành công");
                 navigate(`/products/${_res.id}`);
@@ -144,35 +172,40 @@ export default function ProductDetail({}: Props) {
 
     function updateAfterDeleteProperty(){
         setLoading(true)
-        getProductById(id)
-            .then((res) => {
-                
-                setSizes(res.size);
-                setColors(res.color);
-                setMaterials(res.material);
-                setVariants([...res.variants]);
-               
-            })
-            .finally(() => setLoading(false));
+        if(store) {
+            getProductById(id, store.id)
+                .then((res) => {
+
+                    setSizes(res.size);
+                    setColors(res.color);
+                    setMaterials(res.material);
+                    setVariants([...res.variants]);
+
+                })
+                .finally(() => setLoading(false));
+        }
+
     }
     useEffect(() => {
-        getProductById(id)
-            .then((res) => {
-                setProduct(res);
-                setSizes(res.size);
-                setColors(res.color);
-                setMaterials(res.material);
-                setVariants([...res.variants]);
-                setImages([...res.imagePath]);
-            })
-            .finally(() => setLoading(false));
-        getAllCategories("").then((res) => {
-            setCategories(res);
-        });
-        getAllBrands("").then((res) => {
-            setBrands(res);
-        });
-    }, []);
+        if(store) {
+            getProductById(id, store.id)
+                .then((res) => {
+                    setProduct(res);
+                    setSizes(res.size);
+                    setColors(res.color);
+                    setMaterials(res.material);
+                    setVariants([...res.variants]);
+                    setImages([...res.imagePath]);
+                })
+                .finally(() => setLoading(false));
+            getAllCategories("").then((res) => {
+                setCategories(res);
+            });
+            getAllBrands("").then((res) => {
+                setBrands(res);
+            });
+        }
+    }, [store]);
 
     useEffect(() => {
         if (colors.length === 0 && additionalColors.length === 1) {
@@ -899,7 +932,7 @@ export default function ProductDetail({}: Props) {
                                                             }}
                                                         >
                                                             Tồn kho:{" "}
-                                                            {variant.quantity}
+                                                            {variant?.variantStores[0]?.quantity || 0}
                                                         </Typography>
                                                     </Box>
                                                 </Box>
@@ -1053,11 +1086,11 @@ export default function ProductDetail({}: Props) {
                                                                 size="small"
                                                                 id="quantity"
                                                                 name="quantity"
-                                                                value={variant?.quantity || ""}
+                                                                value={variant?.variantStores[0]?.quantity || 0}
                                                                 onChange={(e) =>
                                                                     handleVariantChange(
                                                                         index,
-                                                                        "quantity",
+                                                                        "variantStore",
                                                                         e.target
                                                                             .value
                                                                     )

@@ -35,7 +35,10 @@ export const initialProductResponse = {
     updatedOn: new Date(),
     variants: [],
 };
-
+export interface VariantStore {
+    storeId: number;
+    quantity: number;
+}
 export interface VariantResponse {
     id: number;
     name: string;
@@ -52,6 +55,7 @@ export interface VariantResponse {
     updatedOn: Date;
     initialPrice: number;
     priceForSale: number;
+    variantStores: VariantStore[];
 }
 
 export const initialVariantResponse = {
@@ -70,6 +74,7 @@ export const initialVariantResponse = {
     priceForSale: 0,
     createdOn: new Date(),
     updatedOn: new Date(),
+    variantStores: [],
 };
 
 export interface ProductRequest {
@@ -81,6 +86,7 @@ export interface ProductRequest {
     createdOn: Date;
     updatedOn: Date;
     totalQuantity: number;
+    status: boolean;
     variants: VariantRequest[];
 }
 export const initialProductRequest = {
@@ -93,6 +99,7 @@ export const initialProductRequest = {
     updatedOn: new Date(),
     totalQuantity: 0,
     variants: [],
+    status: true,
 };
 
 export interface VariantRequest {
@@ -107,6 +114,8 @@ export interface VariantRequest {
     imagePath: string | "";
     initialPrice: number;
     priceForSale: number;
+    status: boolean;
+    variantStores: VariantStore[];
 }
 
 export const initialVariantRequest = {
@@ -121,6 +130,8 @@ export const initialVariantRequest = {
     imagePath: "",
     initialPrice: 0,
     priceForSale: 0,
+    status: true,
+    variantStores: [],
 };
 
 export interface CategoryResponse {

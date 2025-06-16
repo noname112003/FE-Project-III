@@ -18,6 +18,7 @@ export default function SearchField({ onKeyPress, placeHolder }: Props) {
 
     function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
         setSearchQuery(e.target.value);
+        onKeyPress(e.target.value);
     }
 
     return (

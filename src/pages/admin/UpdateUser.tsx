@@ -23,7 +23,7 @@ import {toast} from "react-toastify";
 // Role options that match backend roles
 const roleOptions = [
   { value: "ROLE_ADMIN", label: "ADMIN (Chủ cửa hàng)" },
-  { value: "ROLE_REPOSITORY", label: "NHÂN VIÊN KHO (Quản lý kho)" },
+  // { value: "ROLE_REPOSITORY", label: "NHÂN VIÊN KHO (Quản lý kho)" },
   { value: "ROLE_SALE", label: "NHÂN VIÊN BÁN HÀNG (Quản lý bán hàng)" },
   { value: "ROLE_SUPPORT", label: "NHÂN VIÊN CHĂM SÓC (Chăm sóc khách hàng)" },
 ];
@@ -31,7 +31,15 @@ const roleOptions = [
 const UpdateUser = () => {
   const { id } = useParams<{ id: string }>(); // Extract the user ID from the URL
   const navigate = useNavigate();
-
+  const [initialData, setInitialData] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    status: null,
+    birthDay: null,
+    role: "",
+  });
   // State to hold the user details
   const [formData, setFormData] = useState({
     name: "",
@@ -50,7 +58,7 @@ const UpdateUser = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch(`https://be-project-iii.onrender.com/v1/user/${id}`);
+        const response = await fetch(`http://localhost:8080/v1/user/${id}`);
         const { data } = await response.json(); // Fetch the data from the response
 
         // Prefill form with user details
@@ -61,11 +69,19 @@ const UpdateUser = () => {
           address: data.address,
           status: data.status,
         });
-
+        const bd = dayjs(data.birthDay || null);
         // Parse createdOn date properly
         setBirthDay(dayjs(data.birthDay || null));
         console.log(data.birthDay);
-
+        setInitialData({
+          name: data.name,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          address: data.address,
+          status: data.status,
+          birthDay: bd,
+          role: data.roles?.[0] || "",
+        });
         // Assuming the first role in the array is the one to be shown
         setRole(data.roles?.[0]?.name || "");
         setLoading(false);
@@ -77,7 +93,16 @@ const UpdateUser = () => {
 
     fetchUserDetails();
   }, [id]);
-
+  const isFormChanged = () => {
+    return (
+        formData.name !== initialData.name ||
+        formData.email !== initialData.email ||
+        formData.phoneNumber !== initialData.phoneNumber ||
+        formData.address !== initialData.address ||
+        role !== initialData.role ||
+        (birthDay?.format("YYYY-MM-DD") || "") !== (initialData.birthDay?.format("YYYY-MM-DD") || "")
+    );
+  };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -139,7 +164,7 @@ const UpdateUser = () => {
     };
 
     try {
-      const response = await fetch(`https://be-project-iii.onrender.com/v1/user/${id}`, {
+      const response = await fetch(`http://localhost:8080/v1/user/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -191,6 +216,7 @@ const UpdateUser = () => {
           variant="contained"
           color="primary"
           onClick={handleSubmit}
+          disabled={!isFormChanged()}
         >
           Lưu
         </Button>
@@ -200,7 +226,7 @@ const UpdateUser = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "400px",
+          minHeight: "400px", backgroundColor: "#f5f5f5"
         }}
       >
         {loading ? (
@@ -216,7 +242,7 @@ const UpdateUser = () => {
           </Box>
         ) : (
           <Box
-            sx={{ padding: 3, backgroundColor: "#f5f5f5", minHeight: "100vh" }}
+            sx={{ padding: 3, minHeight: "100vh" }}
           >
             <Card sx={{ margin: "0 auto", padding: 3, boxShadow: 3 }}>
               <CardContent>

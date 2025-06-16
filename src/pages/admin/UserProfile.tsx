@@ -9,13 +9,13 @@ import {
   Card,
   CardContent,
   Grid,
-  Menu,
   MenuItem,
-  TextField,
+  TextField, Select,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import MainBox from "../../components/layout/MainBox";
+import MainAppBar from "../../components/layout/MainAppBar.tsx";
 
 interface Role {
   id: number;
@@ -36,7 +36,7 @@ interface UserData {
 
 const roleMap: { [key: string]: string } = {
   ROLE_ADMIN: "ADMIN (Chủ cửa hàng)",
-  ROLE_REPOSITORY: "NHÂN VIÊN KHO (Quản lý kho)",
+  // ROLE_REPOSITORY: "NHÂN VIÊN KHO (Quản lý kho)",
   ROLE_SALE: "NHÂN VIÊN BÁN HÀNG (Quản lý bán hàng)",
   ROLE_SUPPORT: "NHÂN VIÊN CHĂM SÓC (Chăm sóc khách hàng)",
 };
@@ -45,7 +45,7 @@ const UserProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<UserData | null>(null);
   // const [currentUser, setCurrentUser] = useState<any>(null);
-  const [anchorEl, setAnchorEl] = useState<any | HTMLElement>(null);
+  // const [anchorEl, setAnchorEl] = useState<any | HTMLElement>(null);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +54,7 @@ const UserProfile: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`https://be-project-iii.onrender.com/v1/user/${id}`);
+        const response = await axios.get(`http://localhost:8080/v1/user/${id}`);
         if (response.data.status === "OK") {
           setUser(response.data.data);
         }
@@ -83,55 +83,27 @@ const UserProfile: React.FC = () => {
 
   return (
     <Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          marginTop: 1.5,
-          marginBottom: 2,
-          backgroundColor: "#ffffff",
-        }}
-      >
-        <Box display="flex" alignItems="center">
-          <Button
-            variant="text"
-            sx={{ color: "#637381", marginLeft: 2 }}
-            // onClick={() => navigate(-1)}
-          >
-            {/* <KeyboardArrowLeft /> */}
-            Tài khoản của tôi
-          </Button>
-        </Box>
-        <Box sx={{ flexGrow: 1, marginRight: 5 }} />
-
-        {user ? (
-          <>
-            <Button
-              aria-controls="simple-menu"
-              aria-haspopup="true"
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget)}
-            >
-              {user.name} <ArrowDropDownIcon />
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={() => setAnchorEl(null)}
-            >
-              {isAdmin && (
-                <MenuItem onClick={() => navigate(`/admin/user`)}>
-                  Danh sách nhân viên
-                </MenuItem>
-              )}
-
+      <MainAppBar>
+        <Box display="flex" alignItems="center" justifyContent="space-between" flex={1}>
+              <Typography variant="h6" sx={{
+                color: '#000',
+                fontFamily: '"Segoe UI", sans-serif',
+                fontSize: '26px',
+                fontStyle: 'normal',
+                fontWeight: 600,
+                lineHeight: 'normal',
+              }}>
+                Tài khoản của tôi
+              </Typography>
+          {user && <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography variant="h6" sx={{ color: '#000', fontWeight: '600' }}>{user.name}</Typography>
+            <Select sx={{ '.MuiOutlinedInput-notchedOutline': { borderStyle: 'none' } }}>
+              <MenuItem onClick={() => navigate(`/account/${user.id}`)}>Thông tin tài khoản</MenuItem>
               <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
-            </Menu>
-          </>
-        ) : (
-          <Button onClick={() => navigate("/login")}>Đăng nhập</Button>
-        )}
-      </Box>
+            </Select>
+          </Box>}
+        </Box>
+      </MainAppBar>
       {loading ? (
         <Box
           sx={{
@@ -144,10 +116,13 @@ const UserProfile: React.FC = () => {
           <CircularProgress />
         </Box>
       ) : user ? (
-      <Box sx={{ padding: 3, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
-        <Card>
+      <MainBox>
+        <Card sx={{
+          backgroundColor: "#F0F1F1", // Màu xám nhạt cho thẻ bên ngoài
+          padding: "20px", // Khoảng cách giữa nội dung bên trong và cạnh thẻ
+        }}>
           <CardContent
-            sx={{ display: "flex", justifyContent: "space-between", gap: 15 }}
+            sx={{ display: "flex", justifyContent: "space-between", gap: 15, backgroundColor: "#fff" }}
           >
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="h6">Thông tin cá nhân</Typography>
@@ -273,7 +248,7 @@ const UserProfile: React.FC = () => {
             </Box>
           </CardContent>
         </Card>
-      </Box>
+      </MainBox>
       ) : (
         <Typography>No user found</Typography>
       )}

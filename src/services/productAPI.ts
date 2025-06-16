@@ -7,17 +7,18 @@ import {
 } from "../models/ProductInterface";
 import apiClient from "./api-clients";
 
-const BASE_URL = "https://be-project-iii.onrender.com/v1/products";
+const BASE_URL = "http://localhost:8080/v1/products";
 
 const LIMIT = 10;
 
-const getAllVariantsForSearch = async (query: string): Promise<Variant[]> => {
+const getAllVariantsForSearch = async (query: string, storeId: number): Promise<Variant[]> => {
     try {
         const response = await apiClient.get(`${BASE_URL}/variants`, {
             params: {
                 page: 0,
                 limit: LIMIT,
                 query: query,
+                storeId: storeId,
             },
         });
         return response.data.data;
@@ -29,7 +30,8 @@ const getAllVariantsForSearch = async (query: string): Promise<Variant[]> => {
 const getListOfProducts = async (
     page: number,
     limit: number,
-    query: string
+    query: string,
+    storeId: number,
 ): Promise<ProductResponse[]> => {
     try {
         const response = await apiClient.get(`${BASE_URL}`, {
@@ -37,6 +39,7 @@ const getListOfProducts = async (
                 page: page,
                 limit: limit,
                 query: query,
+                storeId: storeId,
             },
         });
         return response.data.data;
@@ -59,9 +62,15 @@ const getNumberOfProducts = async (query: string): Promise<number> => {
 };
 
 const getProductById = async (
-    id: string | undefined
+    id: string | undefined,
+    storeId: number
 ): Promise<ProductResponse> => {
-    const response = await apiClient.get(`${BASE_URL}/${id}`);
+    const response = await apiClient.get(`${BASE_URL}/${id}`,
+        {
+            params: {
+                storeId: storeId,
+            },
+        });
     return response.data.data;
 };
 
@@ -74,12 +83,16 @@ const createProduct = async (
 
 const updateProduct = async (
     id: string | undefined,
-    product: ProductRequest
+    product: ProductRequest,
+    storeId: number
 ): Promise<ProductResponse> => {
-    const response = await apiClient.put(`${BASE_URL}/${id}/edit`, product);
+    const response = await apiClient.put(`${BASE_URL}/${id}/edit`, product, {
+        params: {
+            storeId: storeId,
+        },
+    });
     return response.data.data;
 };
-
 const deleteProduct = async (id: string | undefined): Promise<any> => {
     const response = await apiClient.delete(`${BASE_URL}/${id}`);
     return response.data.data;
@@ -88,7 +101,8 @@ const deleteProduct = async (id: string | undefined): Promise<any> => {
 const getListOfVariants = async (
     page: number,
     limit: number,
-    query: string
+    query: string,
+    storeId: number
 ): Promise<VariantResponse[]> => {
     try {
         const response = await apiClient.get(`${BASE_URL}/variants`, {
@@ -96,6 +110,7 @@ const getListOfVariants = async (
                 page: page,
                 limit: limit,
                 query: query,
+                storeId: storeId,
             },
         });
         return response.data.data;

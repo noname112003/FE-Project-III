@@ -39,7 +39,7 @@ export default function AddVariant({}: Props) {
     // const [image,setImage] =useState<string>("");
 
     useEffect(() => {
-        getProductById(id)
+        getProductById(id, null)
             .then((res) => {
                 setProduct(res);
                 setNewVariant({
@@ -52,6 +52,7 @@ export default function AddVariant({}: Props) {
                     initialPrice: 0,
                     priceForSale: 0,
                     quantity: 0,
+                    status: true,
                 });
             })
             .finally(() => setLoading(false));

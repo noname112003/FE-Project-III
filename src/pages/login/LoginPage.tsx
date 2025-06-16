@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {
-  Container,
-  TextField,
-  Button,
-  Typography,
-  Box,
-  Alert,
-  InputAdornment,
-  IconButton,
+    Container,
+    TextField,
+    Button,
+    Typography,
+    Box,
+    Alert,
+    InputAdornment,
+    IconButton, Link,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +44,7 @@ const LoginPage: React.FC = () => {
     setEmailError(false); // Reset email error if format is valid
 
     try {
-      const response = await axios.post("https://be-project-iii.onrender.com/v1/auth/login", {
+      const response = await axios.post("http://localhost:8080/v1/auth/login", {
         email,
         password,
       });
@@ -177,6 +177,16 @@ const LoginPage: React.FC = () => {
               Đăng nhập
             </Button>
           </Box>
+            <Box sx={{ textAlign: "center", mt: 2 }}>
+                <Link
+                    component="button"
+                    variant="body2"
+                    onClick={() => navigate('/forgot-password')}
+                    sx={{ color: "blue", cursor: "pointer" }}
+                >
+                    Quên mật khẩu?
+                </Link>
+            </Box>
         </Box>
       </Container>
     </Box>

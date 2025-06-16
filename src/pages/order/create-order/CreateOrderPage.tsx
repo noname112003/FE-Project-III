@@ -22,6 +22,9 @@ import { useNavigate } from "react-router-dom"
 import { useReactToPrint } from "react-to-print"
 import { ReceiptToPrint } from "./Receipt"
 import { NumericFormat } from "react-number-format"
+import {useDispatch, useSelector} from "react-redux";
+import {VariantResponse} from "../../../models/ProductInterface.tsx";
+
 
 type VariantTableRowProps = {
   index: number,
@@ -182,14 +185,13 @@ export default function CreateOrderPage({ }: Props) {
   const [customerKeyword, setCustomerKeyword] = useState<string>('');
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [variantQuery, setVariantQuery] = useState<string>('');
-  const [variantList, setVariantList] = useState<Variant[]>([]);
+  const [variantList, setVariantList] = useState<VariantResponse[]>([]);
   const [orderDetailList, setOrderDetailList] = useState<OrderDetail[]>([]);
   const [totalQuantity, setTotalQuantity] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [cashReceived, setCashReceived] = useState<number>(0);
   const [note, setNote] = useState<string>('');
   const [doesCreatingOrder, setDoesCreatingOrder] = useState<boolean>(false);
-
   const [newOrderReceipt, setNewOrderReceipt] = useState<any>({
     createdOn: "",
     creatorId: 0,
@@ -201,7 +203,7 @@ export default function CreateOrderPage({ }: Props) {
     note: ""
   });
   const navigate = useNavigate();
-
+  const store = useSelector((state: any) => state.storeSetting.store);
   const receiptRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => receiptRef.current,
@@ -218,10 +220,10 @@ export default function CreateOrderPage({ }: Props) {
   }, [customerKeyword]);
 
   useEffect(() => {
-    getAllVariantsForSearch(variantQuery).then((res) => {
+    getAllVariantsForSearch(variantQuery, store?.id).then((res) => {
       setVariantList(res);
     });
-  }, [variantQuery]);
+  }, [variantQuery, store]);
 
   useLayoutEffect(() => {
     let totalQuantity = 0;
@@ -249,6 +251,7 @@ export default function CreateOrderPage({ }: Props) {
     }
     const newOrder = {
       customerId: selectedCustomer.id,
+      storeId: store.id,
       creatorId: JSON.parse(localStorage.getItem('user') || '{}').id,
       totalQuantity: totalQuantity,
       note: note,
@@ -352,7 +355,7 @@ export default function CreateOrderPage({ }: Props) {
             getOptionLabel={(option: any) => `${option.productName} (${option.name})`}
             renderInput={(params) => <TextField {...params} placeholder="Tìm kiếm sản phẩm theo SKU, tên" />}
             sx={{ width: '100%', mb: 2 }}
-            onChange={(_event: any, value: Variant | null) => {
+            onChange={(_event: any, value: VariantResponse | null) => {
               if(value?.quantity === 0) {
                 toast.error("Sản phẩm đã hết hàng");
                 return;
@@ -374,7 +377,7 @@ export default function CreateOrderPage({ }: Props) {
                 </Box>
                 <Box>
                   <Typography variant="body1" sx={{ color: '#000', fontWeight: '600', ml: 2 }}>{formatCurrency(option.priceForSale)}</Typography>
-                  <Typography variant="body2" sx={{ color: '#747C87', ml: 2 }}>{option.quantity} sản phẩm</Typography>
+                  <Typography variant="body2" sx={{ color: '#747C87', ml: 2 }}>{option?.variantStores[0]?.quantity || 0} sản phẩm</Typography>
                 </Box>
               </Box>
             }}

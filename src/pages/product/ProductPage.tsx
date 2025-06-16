@@ -11,9 +11,8 @@ import {
     TableRow,
 } from "@mui/material";
 import MainBox from "../../components/layout/MainBox";
-import ProductPageAppBar from "./ProductPageAppBar";
 import { Add, Image } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchField from "./SearchField";
 import { useNavigate } from "react-router-dom";
 import {
@@ -22,7 +21,9 @@ import {
 } from "../../services/productAPI";
 import { ProductResponse } from "../../models/ProductInterface";
 import { formatDate } from "../../utils/formatDate";
-
+import "../styles.css";
+import Header from "../../components/layout/Header.tsx";
+import {useSelector} from "react-redux";
 type Props = {};
 
 export default function ProductPage({}: Props) {
@@ -35,6 +36,7 @@ export default function ProductPage({}: Props) {
         pageSize: 10,
     });
     const navigate = useNavigate();
+    const store = useSelector((state: any) => state.storeSetting.store);
 
     function handlePaginationChange(
         _e: React.MouseEvent<HTMLButtonElement> | null,
@@ -52,49 +54,30 @@ export default function ProductPage({}: Props) {
     }
 
     useEffect(() => {
-        getNumberOfProducts(query).then((res) => {
-            setNumberOfProducts(res);
-        });
-        getListOfProducts(paginationModel.page, paginationModel.pageSize, query)
-            .then((res) => {
-                setData(res);
-            })
-            .finally(() => setLoading(false));
-    }, []);
+        if(store) {
+            getNumberOfProducts(query).then((res) => {
+                setNumberOfProducts(res);
+            });
+            getListOfProducts(paginationModel.page, paginationModel.pageSize, query, store.id)
+                .then((res) => {
+                    setData(res);
+                })
+                .finally(() => setLoading(false));
+        }
 
-    useEffect(() => {
-        getListOfProducts(paginationModel.page, paginationModel.pageSize, query)
-            .then((res) => {
-                setData(res);
-            })
-            .finally(() => setLoading(false));
-    }, [paginationModel.pageSize, paginationModel.page]);
+    }, [paginationModel.pageSize, paginationModel.page, query, store]);
 
-    useEffect(() => {
-        getNumberOfProducts(query).then((res) => {
-            setNumberOfProducts(res);
-        });
-        getListOfProducts(
-            paginationModel.page,
-            paginationModel.pageSize,
-            query
-        ).then((res) => {
-            setData(res);
-        });
-    }, [query]);
 
     return (
         <Box>
-            <ProductPageAppBar />
+            <Header/>
             <MainBox>
-                <Box sx={{ padding: "20px 24px", backgroundColor: "#F0F1F1" }}>
+                <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                    <Box className="titleHeader">Danh sách sản phẩm</Box>
                     <Box
                         sx={{
-                            flexGrow: 1,
-                            display: "flex",
-                            padding: "11px 0",
+                            padding: "20px 30px",
                             height: "38px",
-                            justifyContent: "right",
                         }}
                     >
                         <Button
@@ -106,6 +89,8 @@ export default function ProductPage({}: Props) {
                             Thêm sản phẩm
                         </Button>
                     </Box>
+                </Box>
+                <Box sx={{ padding: "20px 24px", backgroundColor: "#F0F1F1" }}>
                     <Box sx={{ backgroundColor: "white", padding: "16px" }}>
                         <SearchField
                             onKeyPress={setQuery}
@@ -202,12 +187,15 @@ export default function ProductPage({}: Props) {
                                                     {row.brandName}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {row.totalQuantity}
+                                                    {row.variants?.reduce((total, variant) => {
+                                                        return (
+                                                            total +
+                                                            (variant.variantStores?.reduce((sum, store) => sum + (store.quantity || 0), 0) || 0)
+                                                        );
+                                                    }, 0) ?? 0}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {formatDate(
-                                                        row.createdOn.toString()
-                                                    )}
+                                                    {row.createdOn ? formatDate(row.createdOn.toString()) : "N/A"}
                                                 </TableCell>
                                             </TableRow>
                                         ))

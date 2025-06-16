@@ -125,6 +125,8 @@ export default function AddProduct({}: Props) {
                     imagePath: images[0] || "",
                     priceForSale: priceForSale,
                     initialPrice: initialPrice,
+                    status: true,
+                    variantStores: [],
                 });
             } else {
                 updatedVariants = variants.map((variant) => {
@@ -262,6 +264,8 @@ export default function AddProduct({}: Props) {
                             imagePath: "",
                             initialPrice: 0,
                             priceForSale: 0,
+                            status: true,
+                            variantStores: [],
                         };
                         updatedVariants.push(variant);
                     }

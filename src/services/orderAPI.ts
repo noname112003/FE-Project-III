@@ -1,9 +1,9 @@
 import axios from 'axios';
 import apiClient from './api-clients';
 
-const BASE_URL = 'https://be-project-iii.onrender.com/v1/orders';
+const BASE_URL = 'http://localhost:8080/v1/orders';
 
-const getAllOrders = async (page: number, limit: number, query: string, startDate: string, endDate: string): Promise<any> => {
+const getAllOrders = async (page: number, limit: number, query: string, startDate: string, endDate: string, storeId: number): Promise<any> => {
     try {
         const response = await apiClient.get(`${BASE_URL}/`, {
             params: {
@@ -11,7 +11,8 @@ const getAllOrders = async (page: number, limit: number, query: string, startDat
                 limit: limit,
                 query: query,
                 startDate: startDate,
-                endDate: endDate
+                endDate: endDate,
+                storeId: storeId
             }
         });
         return response.data;
@@ -20,13 +21,14 @@ const getAllOrders = async (page: number, limit: number, query: string, startDat
     }
 }
 
-const getNumberOfOrders = async (query: string, startDate: string, endDate: string): Promise<any> => {
+const getNumberOfOrders = async (query: string, startDate: string, endDate: string,  storeId: number): Promise<any> => {
     try {
         const response = await apiClient.get(`${BASE_URL}/count`, {
             params: {
                 query: query,
                 startDate: startDate,
-                endDate: endDate
+                endDate: endDate,
+                storeId: storeId
             }
         });
         return response.data;
@@ -43,14 +45,26 @@ const getOrderDetail = async (orderCode: string | undefined): Promise<any> => {
         return null;
     }
 }
+const getOrderDetailV2 = async (orderCode: string | undefined): Promise<any> => {
+    try {
+        const response = await apiClient.get(`${BASE_URL}/v2/${orderCode}`);
+        return response.data;
+    } catch (error) {
+        return null;
+    }
+}
 
 const createOrder = async (order: any): Promise<any> => {
     return await apiClient.post(`${BASE_URL}/create`, order);
 }
-const getTodayOrders = async (pageNum: number, pageSize: number) => {
+const updateOrder = async (order: any, id: number | undefined): Promise<any> => {
+    return await apiClient.put(`${BASE_URL}/update/${id}`, order);
+}
+const getTodayOrders = async (storeId: number, pageNum: number, pageSize: number) => {
     try {
         const response = await axios.get(`${BASE_URL}/today`, {
             params: {
+                storeId: storeId,
                 pageNum: pageNum,
                 pageSize: pageSize
             },
@@ -65,4 +79,4 @@ const getTodayOrders = async (pageNum: number, pageSize: number) => {
     }
 };
 
-export { createOrder, getAllOrders, getNumberOfOrders, getOrderDetail, getTodayOrders };
+export { createOrder, getAllOrders, getNumberOfOrders, getOrderDetail, getTodayOrders, getOrderDetailV2, updateOrder };

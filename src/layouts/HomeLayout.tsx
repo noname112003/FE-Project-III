@@ -2,10 +2,27 @@ import { Outlet } from "react-router-dom"
 import HomeDrawer from "../components/drawer/HomeDrawer"
 import { Box } from "@mui/material"
 import { ToastContainer } from 'react-toastify';
+import {useEffect} from "react";
+import {getStores} from "../services/storeAPI.ts";
+import {useDispatch} from "react-redux";
+import {setStores} from "../reducers/storesReducer.tsx";
+import {setStore} from "../reducers/storeSettingReducer.tsx";
 
 type Props = {}
 
 export default function HomeLayout({}: Props) {
+    const dispatch = useDispatch();
+    const user = JSON.parse(localStorage.getItem("user") as string);
+    useEffect(() => {
+        const fetchStores = async () => {
+            const storesData = await getStores(Number(user.id));
+            dispatch(setStores(storesData));
+            dispatch(setStore(storesData[0]));
+        };
+
+        fetchStores();
+    }, []);
+
   return (
     <Box sx={{display: 'flex'}}>
       <HomeDrawer />

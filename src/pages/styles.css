@@ -1,0 +1,9 @@
+.titleHeader {
+    color: #000; /* Màu chữ */
+    font-family: "Segoe UI", sans-serif; /* Phông chữ */
+    font-size: 26px; /* Kích thước chữ */
+    font-style: normal; /* Kiểu chữ */
+    font-weight: 600; /* Độ đậm của chữ */
+    line-height: normal; /* Chiều cao dòng */
+    padding: 20px 30px; /* Padding */
+}

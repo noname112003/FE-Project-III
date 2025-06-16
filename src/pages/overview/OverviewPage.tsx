@@ -1,6 +1,5 @@
-import { Box, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, Typography, Select, MenuItem } from "@mui/material"
+import { Box, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, Typography } from "@mui/material"
 import MainBox from "../../components/layout/MainBox"
-import MainAppBar from "../../components/layout/MainAppBar.tsx";
 import React, { useEffect, useState } from "react";
 import { getTodayOrders } from "../../services/orderAPI.ts";
 import { formatCurrency } from "../../utils/formatCurrency.ts";
@@ -8,7 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../utils/formatDate.ts";
 import profitUp from '../../assets/profit-up.jpg';
 import shoppingBag from '../../assets/shopping-bag.jpg';
-
+import Header from "../../components/layout/Header.tsx";
+import  "../styles.css"
+import {useSelector} from "react-redux";
 
 export default function OverviewPage() {
   const [pageNum, setPageNum] = useState<number>(0);
@@ -17,12 +18,11 @@ export default function OverviewPage() {
 
   const [totalOrders, setTotalOrders] = useState<number>(0);
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
-  const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
-
+  const store = useSelector((state: any) => state.storeSetting.store);
   const fetchTodayOrders = async () => {
     try {
-      const data = await getTodayOrders(pageNum, pageSize); // Gọi API
+      const data = await getTodayOrders(store.id, pageNum, pageSize); // Gọi API
       setOrders(data.orders.content);
       // setTotalPages(data.orders.totalPages);
       setTotalOrders(data.orders.totalElements);
@@ -32,20 +32,10 @@ export default function OverviewPage() {
     }
   };
 
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    setUser(user ? JSON.parse(user) : null);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
-  }
 
   useEffect(() => {
     fetchTodayOrders();
-  }, [pageNum, pageSize]);
+  }, [pageNum, pageSize,store]);
   const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPageNum(newPage);
   };
@@ -54,31 +44,14 @@ export default function OverviewPage() {
     setPageNum(0); // Reset về trang đầu khi thay đổi số hàng
   };
   const handleDetailsClick = (orderId: number) => {
-    navigate(`/order/${orderId}`); // Chuyển hướng tới trang chi tiết của khách hàng
+    navigate(`/orders/${orderId}`); // Chuyển hướng tới trang chi tiết của khách hàng
   };
   return (
     <Box>
-      <MainAppBar>
-        <Box display="flex" alignItems="center" justifyContent="space-between" flex={1}>
-          <Typography variant="h6" sx={{
-            color: '#000', // Màu chữ
-            fontFamily: '"Segoe UI", sans-serif', // Phông chữ
-            fontSize: '26px', // Kích thước chữ
-            fontStyle: 'normal', // Kiểu chữ
-            fontWeight: 600, // Độ đậm của chữ
-            lineHeight: 'normal', // Chiều cao dòng
-          }}  >Tổng quan</Typography>
-          {user && <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography variant="h6" sx={{ color: '#000', fontWeight: '600' }}>{user.name}</Typography>
-            <Select sx={{ '.MuiOutlinedInput-notchedOutline': { borderStyle: 'none' } }}>
-              <MenuItem onClick={() => navigate(`/account/${user.id}`)}>Thông tin tài khoản</MenuItem>
-              <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
-            </Select>
-          </Box>}
-        </Box>
-      </MainAppBar>
+      <Header/>
       <MainBox>
         <Box>
+          <Box className="titleHeader">Tổng quan</Box>
           <Box sx={{ display: 'flex', padding: '24px 30px' }}>
             <Box sx={{
               display: 'flex', flexBasis: '40%', marginRight: '20px', backgroundColor: 'white', borderRadius: '5px',  // Bo góc

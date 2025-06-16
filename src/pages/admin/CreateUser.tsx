@@ -19,6 +19,7 @@ import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
 import {toast} from "react-toastify";
+import {useSelector} from "react-redux";
 
 type Props = {};
 
@@ -33,7 +34,7 @@ type Props = {};
 // Role options that match backend roles
 const roleOptions = [
   { value: "ROLE_ADMIN", label: "ADMIN" },
-  { value: "ROLE_REPOSITORY", label: "NHÂN VIÊN KHO" },
+  // { value: "ROLE_REPOSITORY", label: "NHÂN VIÊN KHO" },
   { value: "ROLE_SALE", label: "NHÂN VIÊN BÁN HÀNG" },
   { value: "ROLE_SUPPORT", label: "NHÂN VIÊN CHĂM SÓC" },
 ];
@@ -55,6 +56,8 @@ export default function CreateUser({}: Props) {
   const [phoneNumberError, setPhoneNumberError] = useState<string>("");
   const [roleError, setRoleError] = useState<string>("");
   const navigate = useNavigate();
+  const store = useSelector((state: any) => state.storeSetting.store);
+
 
   // Update form data
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +81,7 @@ export default function CreateUser({}: Props) {
   const checkEmail = async () => {
     try {
       const response = await fetch(
-        `https://be-project-iii.onrender.com/v1/user/check-email/${formData.email}`,
+        `http://localhost:8080/v1/user/check-email/${formData.email}`,
         {
           method: "GET",
           headers: {
@@ -223,7 +226,7 @@ const validatePhoneNumber = (phoneNumber: string): boolean => {
     };
 
     try {
-      const response = await fetch("https://be-project-iii.onrender.com/v1/auth/register", {
+      const response = await fetch(`http://localhost:8080/v1/auth/register?storeId=${store.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
