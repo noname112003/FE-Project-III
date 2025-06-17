@@ -1,6 +1,5 @@
 import { Autocomplete, Box, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography, TableContainer, Button, Dialog, DialogTitle, DialogContent, FormControl, FormControlLabel, RadioGroup, Radio, CircularProgress } from "@mui/material"
 import MainBox from "../../../components/layout/MainBox"
-import CreateOrderAppBar from "./CreateOrderAppBar"
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import {createCustomer, getCustomerById, getCustomersByKeyword} from "../../../services/customerAPI"
 import Customer from "../../../models/Customer"
@@ -12,7 +11,7 @@ import { formatCurrency } from "../../../utils/formatCurrency"
 import OrderDetail from "../../../models/OrderDetail"
 import { toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
-import {createOrder, getOrderDetail, getOrderDetailV2, updateOrder} from "../../../services/orderAPI"
+import { getOrderDetailV2, updateOrder} from "../../../services/orderAPI"
 import { LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -21,7 +20,7 @@ import {useNavigate, useParams} from "react-router-dom"
 import { useReactToPrint } from "react-to-print"
 import { ReceiptToPrint } from "./Receipt"
 import { NumericFormat } from "react-number-format"
-import {useDispatch, useSelector} from "react-redux";
+import { useSelector} from "react-redux";
 import {VariantResponse} from "../../../models/ProductInterface.tsx";
 import Order from "../../../models/Order.ts";
 

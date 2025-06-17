@@ -1,5 +1,5 @@
 import {
-    Box, Button, FormControl, InputLabel, MenuItem, Select,
+    Box, Button, FormControl,
     TextField,
     Typography
 } from "@mui/material"
@@ -53,7 +53,7 @@ export default function StoreSetting() {
     };
     const handleSave = async () => {
         try {
-            const response = await axios.put(`http://localhost:8080/v1/stores/${store.id}`, formData);
+            // const response = await axios.put(`http://localhost:8080/v1/stores/${store.id}`, formData);
             await fetchStores();
             toast.success("Cập nhật thông tin cửa hàng thành công!");
 

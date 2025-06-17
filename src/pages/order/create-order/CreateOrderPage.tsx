@@ -7,7 +7,6 @@ import Customer from "../../../models/Customer"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BadgeIcon from '@mui/icons-material/Badge';
 import { getAllVariantsForSearch } from "../../../services/productAPI"
-import Variant from "../../../models/Variant"
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { formatCurrency } from "../../../utils/formatCurrency"
 import OrderDetail from "../../../models/OrderDetail"
@@ -22,7 +21,7 @@ import { useNavigate } from "react-router-dom"
 import { useReactToPrint } from "react-to-print"
 import { ReceiptToPrint } from "./Receipt"
 import { NumericFormat } from "react-number-format"
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {VariantResponse} from "../../../models/ProductInterface.tsx";
 
 

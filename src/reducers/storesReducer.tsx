@@ -21,7 +21,7 @@ export const setStores = (stores: any) => ({
 //     payload: store,
 // });
 
-const storesReducer = (state = initialState, action) => {
+const storesReducer = (state = initialState, action: any) => {
     switch (action.type) {
         case STORE_ACTIONS.SET_STORES:
             return {

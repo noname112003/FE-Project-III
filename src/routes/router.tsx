@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import HomeLayout from "../layouts/HomeLayout";
-import LoginPage from "../pages/login/LoginPage";
 import OrderListPage from "../pages/order/order-list/OrderListPage";
 import CreateOrderPage from "../pages/order/create-order/CreateOrderPage";
 import DetailOrderPage from "../pages/order/detail-order/DetailOrderPage";
@@ -81,7 +80,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "customers",
-            // element: <CustomerRoute />,
+            element: <CustomerRoute />,
             children: [
               {
                 path: "",
@@ -141,7 +140,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "/admin",
-            // element: <AdminRoute />,
+            element: <AdminRoute />,
             children: [
               {
                 path: "user",
@@ -165,7 +164,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "/store",
-            // element: <AdminRoute />,
+            element: <AdminRoute />,
             children: [
               {
                 path: "",

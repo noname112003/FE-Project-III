@@ -63,7 +63,7 @@ const getNumberOfProducts = async (query: string): Promise<number> => {
 
 const getProductById = async (
     id: string | undefined,
-    storeId: number
+    storeId: number | null
 ): Promise<ProductResponse> => {
     const response = await apiClient.get(`${BASE_URL}/${id}`,
         {
