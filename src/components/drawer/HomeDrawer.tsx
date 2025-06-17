@@ -29,9 +29,9 @@ type Props = {}
 export default function HomeDrawer({ }: Props) {
   const [openOrder, setOpenOrder] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
-  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // State for dropdown menu
+
   const [openDropdown, setOpenDropdown] = useState(false);
-  // const openDropdown = Boolean(anchorEl); // Check if dropdown is open
+
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,18 +42,14 @@ export default function HomeDrawer({ }: Props) {
 // Lấy user từ localStorage
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const isAdmin = user?.roles?.includes('ROLE_ADMIN');
-  // const handleClickDropdown = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
+
   useEffect(() => {
     console.log("storesData từ Redux:", storesData);
   }, [storesData]);
   useEffect(() => {
     setSelectedStoreId(store?.id)
   }, [store]);
-  // const handleCloseDropdown = () => {
-  //   setAnchorEl(null);
-  // };
+
   const stores = JSON.parse(localStorage.getItem("stores") || "[]");
   return (
     <Drawer sx={{
@@ -155,7 +151,6 @@ export default function HomeDrawer({ }: Props) {
                   onClose={() => setOpenDropdown(false)}
                   IconComponent={openDropdown ? ExpandLess : ExpandMore}
               >
-                {/* Không cần InputLabel nữa nên xóa nó */}
                 {stores.map((store: { id: number; name: string }) => (
                     <MenuItem key={store.id} value={store.id}>
                       {store.name}
