@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import {
   Box,
-  Typography,
   Button,
   MenuItem,
   Select,
-  Toolbar,
   Table,
   TableBody,
   TableCell,
@@ -67,12 +65,12 @@ type TablePaginationActionsProps = {
   ) => void;
 };
 
-const roleMap: { [key: string]: string } = {
-  ROLE_ADMIN: "ADMIN",
-  // ROLE_REPOSITORY: "NHÂN VIÊN KHO",
-  ROLE_SALE: "NHÂN VIÊN BÁN HÀNG",
-  ROLE_SUPPORT: "NHÂN VIÊN CHĂM SÓC",
-};
+// const roleMap: { [key: string]: string } = {
+//   ROLE_ADMIN: "ADMIN",
+//   // ROLE_REPOSITORY: "NHÂN VIÊN KHO",
+//   ROLE_SALE: "NHÂN VIÊN BÁN HÀNG",
+//   ROLE_SUPPORT: "NHÂN VIÊN CHĂM SÓC",
+// };
 type Props = {};
 export default function User({}: Props) {
   const [users, setUsers] = useState<User[]>([]);
@@ -84,7 +82,7 @@ export default function User({}: Props) {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc"); // Default sorting order
   const [selectedRole, setSelectedRole] = useState<string | "">("");
   // const [anchorEl, setAnchorEl] = useState<any | HTMLElement>(null);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  // const [currentUser, setCurrentUser] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>(""); // Thêm searchQuery
   const store = useSelector((state: any) => state.storeSetting.store);
@@ -103,12 +101,12 @@ export default function User({}: Props) {
     };
   }, [searchQuery]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('stores');
-    navigate('/login');
-  }
+  // const handleLogout = () => {
+  //   localStorage.removeItem('token');
+  //   localStorage.removeItem('user');
+  //   localStorage.removeItem('stores');
+  //   navigate('/login');
+  // }
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -135,10 +133,10 @@ export default function User({}: Props) {
     // fetchUsers(page, pageSize , sortColumn , sortOrder);
     fetchUsers();
 
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
-    }
+    // const storedUser = localStorage.getItem("user");
+    // if (storedUser) {
+    //   setCurrentUser(JSON.parse(storedUser));
+    // }
   }, [page, pageSize, sortColumn, sortOrder, selectedRole    
     //, searchQuery 
     , debouncedSearchQuery, store]);

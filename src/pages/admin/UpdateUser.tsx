@@ -31,7 +31,15 @@ const roleOptions = [
 const UpdateUser = () => {
   const { id } = useParams<{ id: string }>(); // Extract the user ID from the URL
   const navigate = useNavigate();
-  const [initialData, setInitialData] = useState({
+  const [initialData, setInitialData] = useState<{
+    name: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    status: boolean | null;
+    birthDay: Dayjs | null;
+    role: string;
+  }>({
     name: "",
     email: "",
     phoneNumber: "",
@@ -69,8 +77,7 @@ const UpdateUser = () => {
           address: data.address,
           status: data.status,
         });
-        const bd = dayjs(data.birthDay || null);
-        // Parse createdOn date properly
+        const bd: Dayjs | null = dayjs(data.birthDay || null);        // Parse createdOn date properly
         setBirthDay(dayjs(data.birthDay || null));
         console.log(data.birthDay);
         setInitialData({

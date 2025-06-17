@@ -73,7 +73,7 @@ const UserProfile: React.FC = () => {
     return <Alert severity="error">{error}</Alert>;
   }
 
-  const isAdmin = user?.roles?.some((role) => role.name === "ROLE_ADMIN");
+  // const isAdmin = user?.roles?.some((role) => role.name === "ROLE_ADMIN");
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove token

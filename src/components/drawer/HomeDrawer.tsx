@@ -2,12 +2,11 @@ import {
   Box,
   Collapse,
   Divider,
-  Drawer, FormControl, InputLabel,
+  Drawer, FormControl,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Menu,
   MenuItem, Select,
   Toolbar
 } from "@mui/material"
@@ -30,7 +29,7 @@ type Props = {}
 export default function HomeDrawer({ }: Props) {
   const [openOrder, setOpenOrder] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // State for dropdown menu
+  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // State for dropdown menu
   const [openDropdown, setOpenDropdown] = useState(false);
   // const openDropdown = Boolean(anchorEl); // Check if dropdown is open
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
@@ -43,18 +42,18 @@ export default function HomeDrawer({ }: Props) {
 // Lấy user từ localStorage
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const isAdmin = user?.roles?.includes('ROLE_ADMIN');
-  const handleClickDropdown = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleClickDropdown = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
   useEffect(() => {
     console.log("storesData từ Redux:", storesData);
   }, [storesData]);
   useEffect(() => {
     setSelectedStoreId(store?.id)
   }, [store]);
-  const handleCloseDropdown = () => {
-    setAnchorEl(null);
-  };
+  // const handleCloseDropdown = () => {
+  //   setAnchorEl(null);
+  // };
   const stores = JSON.parse(localStorage.getItem("stores") || "[]");
   return (
     <Drawer sx={{

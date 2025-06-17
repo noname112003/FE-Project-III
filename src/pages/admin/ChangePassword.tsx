@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Box,
@@ -10,7 +10,6 @@ import {
   Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import {toast} from "react-toastify";
 import MainBox from "../../components/layout/MainBox";
 import MainAppBar from "../../components/layout/MainAppBar.tsx";
@@ -20,19 +19,19 @@ import AccountSection from "../product/AccountSection.tsx";
 const ChangePassword: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [user, setUser] = useState<string>();
+  // const [user, setUser] = useState<string>();
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
-  useEffect(() => {
-    const response = localStorage.getItem("user");
-    if (response) {
-      const userData = JSON.parse(response);
-      setUser(userData.name);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const response = localStorage.getItem("user");
+  //   // if (response) {
+  //   //   const userData = JSON.parse(response);
+  //   //   // setUser(userData.name);
+  //   // }
+  // }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

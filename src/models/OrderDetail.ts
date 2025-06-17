@@ -1,4 +1,3 @@
-import Variant from "./Variant";
 import {VariantResponse} from "./ProductInterface.tsx";
 
 
