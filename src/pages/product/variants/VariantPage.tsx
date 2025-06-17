@@ -24,6 +24,10 @@ import { formatDate } from "../../../utils/formatDate";
 import Header from "../../../components/layout/Header.tsx";
 import {useSelector} from "react-redux";
 
+interface Store {
+    id: number;
+    name: string;
+}
 
 export default function VariantPage() {
     const [data, setData] = useState<VariantResponse[]>([]);
@@ -97,7 +101,7 @@ export default function VariantPage() {
                                     }}
                                 >
                                     <MenuItem value="all">Tất cả nhà hàng</MenuItem>
-                                    {storeList.map((s:any) => (
+                                    {storeList.map((s:Store) => (
                                         <MenuItem key={s.id} value={s.id}>
                                             {s.name}
                                         </MenuItem>
@@ -198,7 +202,7 @@ export default function VariantPage() {
                                                                 <ul style={{marginTop: 8}}>
                                                                     {row.variantStores.map((vs) => {
                                                                         const storeName =
-                                                                            storeList.find((s) => s.id === vs.storeId)?.name ||
+                                                                            storeList.find((s: Store) => s.id === vs.storeId)?.name ||
                                                                             `Store ${vs.storeId}`;
                                                                         return (
                                                                             <li key={vs.storeId}>

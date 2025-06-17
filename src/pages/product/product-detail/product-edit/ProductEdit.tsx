@@ -65,7 +65,7 @@ export default function ProductDetail() {
 
         if (field === "variantStore") {
             // Giả sử mỗi variant có ít nhất một variantStore
-            const updatedVariantStore = [...updatedVariants[index].variantStores];
+            const updatedVariantStore = updatedVariants[index].variantStores || [];
             if (updatedVariantStore.length > 0) {
                 updatedVariantStore[0] = {
                     ...updatedVariantStore[0],
@@ -871,7 +871,7 @@ export default function ProductDetail() {
                                                         borderRadius: "3px",
                                                     }}
                                                 >
-                                                    {variant.imagePath.length >
+                                                    {variant.imagePath && variant.imagePath?.length >
                                                     0 ? (
                                                         <CardMedia
                                                             component="img"
@@ -932,7 +932,7 @@ export default function ProductDetail() {
                                                             }}
                                                         >
                                                             Tồn kho:{" "}
-                                                            {variant?.variantStores[0]?.quantity || 0}
+                                                            {variant.variantStores && variant?.variantStores[0]?.quantity || 0}
                                                         </Typography>
                                                     </Box>
                                                 </Box>
@@ -1086,7 +1086,7 @@ export default function ProductDetail() {
                                                                 size="small"
                                                                 id="quantity"
                                                                 name="quantity"
-                                                                value={variant?.variantStores[0]?.quantity || 0}
+                                                                value={variant.variantStores && variant?.variantStores[0]?.quantity || 0}
                                                                 onChange={(e) =>
                                                                     handleVariantChange(
                                                                         index,
@@ -1119,7 +1119,7 @@ export default function ProductDetail() {
                                                                     "center",
                                                             }}
                                                         >
-                                                            {variant.imagePath
+                                                            {variant.imagePath && variant?.imagePath
                                                                 .length > 0 ? (
                                                                 <CardMedia
                                                                     component="img"

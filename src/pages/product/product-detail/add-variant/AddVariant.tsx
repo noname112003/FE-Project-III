@@ -166,7 +166,7 @@ export default function AddVariant({}: Props) {
                                             borderRadius: "3px",
                                         }}
                                     >
-                                        {newVariant?.imagePath?.length > 0 ? (
+                                        {newVariant?.imagePath && newVariant?.imagePath?.length > 0 ? (
                                             <CardMedia
                                                 component="img"
                                                 sx={{
@@ -362,7 +362,7 @@ export default function AddVariant({}: Props) {
                                                 justifyContent: "center",
                                             }}
                                         >
-                                            {newVariant?.imagePath?.length >
+                                            {newVariant?.imagePath && newVariant?.imagePath?.length >
                                             0 ? (
                                                 <CardMedia
                                                     component="img"
