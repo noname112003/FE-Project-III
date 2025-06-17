@@ -1,4 +1,4 @@
-interface StoreState {
+export interface StoreState {
     stores: any[];  // Mảng chứa thông tin cửa hàng
 }
 

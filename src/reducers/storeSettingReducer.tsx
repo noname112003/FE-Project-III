@@ -23,7 +23,7 @@ interface store {
     modifiedOn: number | null;
 }
 
-interface StoreSettingState {
+export interface StoreSettingState {
     store: store | null;
 }
 
