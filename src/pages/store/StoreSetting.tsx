@@ -4,12 +4,11 @@ import {
     Typography
 } from "@mui/material"
 import MainBox from "../../components/layout/MainBox"
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 
 import Header from "../../components/layout/Header.tsx";
 import  "../styles.css"
 import {useDispatch, useSelector} from "react-redux";
-import axios from "axios";
 import {toast} from "react-toastify";
 import {getStores} from "../../services/storeAPI.ts";
 import {setStores} from "../../reducers/storesReducer.tsx";

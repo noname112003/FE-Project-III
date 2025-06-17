@@ -111,11 +111,11 @@ export interface VariantRequest {
     size: string;
     color: string;
     material: string;
-    imagePath: string | "";
+    imagePath?: string | "";
     initialPrice: number;
     priceForSale: number;
     status: boolean;
-    variantStores: VariantStore[];
+    variantStores?: VariantStore[];
 }
 
 export const initialVariantRequest = {

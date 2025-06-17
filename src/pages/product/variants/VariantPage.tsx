@@ -97,7 +97,7 @@ export default function VariantPage() {
                                     }}
                                 >
                                     <MenuItem value="all">Tất cả nhà hàng</MenuItem>
-                                    {storeList.map((s) => (
+                                    {storeList.map((s:any) => (
                                         <MenuItem key={s.id} value={s.id}>
                                             {s.name}
                                         </MenuItem>

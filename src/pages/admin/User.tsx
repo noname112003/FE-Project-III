@@ -357,7 +357,7 @@ export default function User({}: Props) {
                                 <TableCell>{user.phoneNumber}</TableCell>
                                 <TableCell>
                                   {(user.roles && user.roles.length > 0)
-                                      ? user.roles.map(role => roleMap[role] || role).join(", ")
+                                      ? user.roles.map(role => roleMap[role.name] || role.name).join(", ")
                                       : "Không có quyền"}
                                 </TableCell>
                                 <TableCell>

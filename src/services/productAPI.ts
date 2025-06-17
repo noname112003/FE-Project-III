@@ -1,4 +1,4 @@
-import Variant from "../models/Variant";
+
 import {
     ProductRequest,
     ProductResponse,
@@ -11,7 +11,7 @@ const BASE_URL = "http://localhost:8080/v1/products";
 
 const LIMIT = 10;
 
-const getAllVariantsForSearch = async (query: string, storeId: number): Promise<Variant[]> => {
+const getAllVariantsForSearch = async (query: string, storeId: number): Promise<VariantResponse[]> => {
     try {
         const response = await apiClient.get(`${BASE_URL}/variants`, {
             params: {
@@ -102,7 +102,7 @@ const getListOfVariants = async (
     page: number,
     limit: number,
     query: string,
-    storeId: number
+    storeId: number | null
 ): Promise<VariantResponse[]> => {
     try {
         const response = await apiClient.get(`${BASE_URL}/variants`, {
