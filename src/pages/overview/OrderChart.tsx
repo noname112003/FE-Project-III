@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Typography, TextField } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
@@ -59,7 +59,10 @@ const OrderChart = () => {
                 {/* Thay thế MUI DatePicker bằng react-datepicker */}
                 <DatePicker
                     selected={selectedDate}
-                    onChange={(date: Date) => setSelectedDate(date)}
+                    // onChange={(date: Date) => setSelectedDate(date)}
+                    onChange={(date: Date | null, _event: any) => {
+                        setSelectedDate(date);
+                    }}
                     dateFormat="dd/MM/yyyy" 
                     customInput={<TextField fullWidth />}
                     popperPlacement="bottom-start"

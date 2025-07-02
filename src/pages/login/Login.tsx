@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./styles.css";
-import {IconEyeOff, IconEyeOpen, IconPass, IconPhone, IconUser} from "./icon.tsx";
+import {IconEyeOff, IconEyeOpen, IconPass, IconPhone} from "./icon.tsx";
 import { ComponentLeftLogin } from "./ComponentLeftLogin.tsx";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/userAPI.ts";
-import {Alert, Link} from "@mui/material";
+import {Alert} from "@mui/material";
 import { getStores } from "../../services/storeAPI.ts";
 import { setStores } from "../../reducers/storesReducer.tsx";
 import { useDispatch } from "react-redux";

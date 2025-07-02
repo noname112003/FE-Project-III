@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import { newFormatCurrency } from "../../../utils/formatCurrency.ts";
 import {toast} from "react-toastify";
 import {getPaymentLink} from "../../../services/orderAPI.ts";
-import * as https from "node:https";
+
 
 interface QRCodeModalProps {
     isOpen: boolean;
@@ -22,7 +22,7 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({accountName, createOrderFn, is
     const qrUrl: string = `https://img.vietqr.io/image/MB-${accountNumber}-vietqr_pro.jpg?amount=${amount}&addInfo=${descreiption}`;
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    const [isPaid, setIsPaid] = useState(false);
+    const [isPaid, setIsPaid] = useState<boolean>(false);
 
     useEffect(() => {
         if (isOpen && orderId) {

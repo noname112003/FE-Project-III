@@ -240,13 +240,27 @@ export default function CreateOrderPage({ }: Props) {
     });
   }, [variantQuery, store]);
 
+  // useLayoutEffect(() => {
+  //   let totalQuantity = 0;
+  //   let totalPrice = 0;
+  //   orderDetailList.forEach((orderDetail) => {
+  //     totalQuantity += orderDetail.quantity;
+  //     totalPrice += orderDetail.quantity * orderDetail.price;
+  //   });
+  //   setTotalQuantity(totalQuantity);
+  //   setTotalPrice(totalPrice);
+  // }, [orderDetailList]);
   useLayoutEffect(() => {
     let totalQuantity = 0;
     let totalPrice = 0;
-    orderDetailList.forEach((orderDetail) => {
-      totalQuantity += orderDetail.quantity;
-      totalPrice += orderDetail.quantity * orderDetail.price;
-    });
+
+    orderDetailList
+        .filter((orderDetail) => orderDetail.quantity > 0)
+        .forEach((orderDetail) => {
+          totalQuantity += orderDetail.quantity;
+          totalPrice += orderDetail.quantity * orderDetail.price;
+        });
+
     setTotalQuantity(totalQuantity);
     setTotalPrice(totalPrice);
   }, [orderDetailList]);
@@ -263,13 +277,13 @@ export default function CreateOrderPage({ }: Props) {
       cashRepay: isCashPayment ? (cashReceived - totalPrice) : 0, // Nếu thanh toán tiền mặt, tính tiền trả lại, nếu quét mã QR, cashRepay = 0
       totalPayment: totalPrice,
       paymentType: paymentMethod, // Chuyển paymentMethod từ radio vào order
-      orderLineItems: orderDetailList.map((orderDetail) => {
-        return {
-          variantId: orderDetail.variantId,
-          quantity: orderDetail.quantity,
-          subTotal: orderDetail.quantity * orderDetail.price
-        }
-      }),
+      orderLineItems: orderDetailList
+          .filter((orderDetail) => orderDetail.quantity > 0)
+          .map((orderDetail) => ({
+            variantId: orderDetail.variantId,
+            quantity: orderDetail.quantity,
+            subTotal: orderDetail.quantity * orderDetail.price,
+          })),
     }
     try {
       const res = await createOrder(newOrder);
@@ -289,7 +303,7 @@ export default function CreateOrderPage({ }: Props) {
       toast.error("Vui lòng chọn khách hàng");
       return;
     }
-    if (orderDetailList.length === 0) {
+    if (orderDetailList.length === 0 || totalQuantity === 0) {
       toast.error("Vui lòng chọn sản phẩm");
       return;
     }
@@ -309,13 +323,13 @@ export default function CreateOrderPage({ }: Props) {
       cashRepay: isCashPayment ? (cashReceived - totalPrice) : 0, // Nếu thanh toán tiền mặt, tính tiền trả lại, nếu quét mã QR, cashRepay = 0
       totalPayment: totalPrice,
       paymentType: paymentMethod, // Chuyển paymentMethod từ radio vào order
-      orderLineItems: orderDetailList.map((orderDetail) => {
-        return {
-          variantId: orderDetail.variantId,
-          quantity: orderDetail.quantity,
-          subTotal: orderDetail.quantity * orderDetail.price
-        }
-      }),
+      orderLineItems: orderDetailList
+          .filter((orderDetail) => orderDetail.quantity > 0)
+          .map((orderDetail) => ({
+            variantId: orderDetail.variantId,
+            quantity: orderDetail.quantity,
+            subTotal: orderDetail.quantity * orderDetail.price,
+          })),
     }
     setDoesCreatingOrder(true);
     if(paymentMethod === "CASH") {
