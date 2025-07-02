@@ -14,18 +14,20 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import {toast} from "react-toastify";
+import MainBox from "../../components/layout/MainBox.tsx";
+import Header from "../../components/layout/Header.tsx";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 
 // Role options that match backend roles
 const roleOptions = [
-  { value: "ROLE_ADMIN", label: "ADMIN (Chủ cửa hàng)" },
-  // { value: "ROLE_REPOSITORY", label: "NHÂN VIÊN KHO (Quản lý kho)" },
-  { value: "ROLE_SALE", label: "NHÂN VIÊN BÁN HÀNG (Quản lý bán hàng)" },
-  { value: "ROLE_SUPPORT", label: "NHÂN VIÊN CHĂM SÓC (Chăm sóc khách hàng)" },
+  // { value: "ROLE_ADMIN", label: "ADMIN (Chủ cửa hàng)" },
+  {id: 3, value: "ROLE_REPOSITORY", label: "NHÂN VIÊN KHO (Quản lý kho)" },
+  {id: 2, value: "ROLE_SALE", label: "NHÂN VIÊN BÁN HÀNG (Quản lý bán hàng)" },
+  // { value: "ROLE_SUPPORT", label: "NHÂN VIÊN CHĂM SÓC (Chăm sóc khách hàng)" },
 ];
 
 const UpdateUser = () => {
@@ -54,7 +56,7 @@ const UpdateUser = () => {
     email: "",
     phoneNumber: "",
     address: "",
-    status: Boolean || null,
+    status: false as boolean | null,
   });
   const [birthDay, setBirthDay] = useState<Dayjs | null>(null);
   const [role, setRole] = useState<string>("");
@@ -87,7 +89,7 @@ const UpdateUser = () => {
           address: data.address,
           status: data.status,
           birthDay: bd,
-          role: data.roles?.[0] || "",
+          role: data.roles?.[0].name || "",
         });
         // Assuming the first role in the array is the one to be shown
         setRole(data.roles?.[0]?.name || "");
@@ -158,7 +160,7 @@ const UpdateUser = () => {
     const selectedRole = roleOptions.find((option) => option.value === role);
     const roleToSubmit = selectedRole
       ? {
-          id: roleOptions.indexOf(selectedRole) + 1, // Assuming IDs are sequential starting from 1
+          id: selectedRole.id, // Assuming IDs are sequential starting from 1
           name: selectedRole.value,
         }
       : null;
@@ -199,43 +201,8 @@ const UpdateUser = () => {
 
   return (
     <Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          marginTop: 1.5,
-          marginBottom: 2,
-          backgroundColor: "#ffffff",
-        }}
-      >
-        <Box display="flex" alignItems="center">
-          <Button
-            variant="text"
-            sx={{ color: "#637381", marginLeft: 2 }}
-            onClick={() => navigate(-1)}
-          >
-            <KeyboardArrowLeft /> Quay lại thông tin nhân viên
-          </Button>
-        </Box>
-        <Box sx={{ flexGrow: 1 }} />
-        <Button
-          sx={{ marginRight: 5 }}
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          disabled={!isFormChanged()}
-        >
-          Lưu
-        </Button>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "400px", backgroundColor: "#f5f5f5"
-        }}
-      >
+      <Header/>
+      <MainBox>
         {loading ? (
           <Box
             sx={{
@@ -249,97 +216,171 @@ const UpdateUser = () => {
           </Box>
         ) : (
           <Box
-            sx={{ padding: 3, minHeight: "100vh" }}
+            sx={{ margin: "0 auto", maxWidth: "70%", }}
           >
-            <Card sx={{ margin: "0 auto", padding: 3, boxShadow: 3 }}>
-              <CardContent>
-                <Typography variant="h6" sx={{ mb: 2 }}>
-                  Thông tin nhân viên
-                </Typography>
+            <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  margin: "20px 20px 0 20px",
+                  // backgroundColor: "#ffffff",
+                }}
+            >
+              <Box display="flex" alignItems="center">
+                <Button
+                    variant="text"
+                    sx={{ color: "#747c87", marginLeft: "-5px", padding: 0 }}
+                    onClick={() => navigate(-1)}
+                >
+                  <KeyboardArrowLeft /> Quay lại màn chi tiết nhân viên
+                </Button>
+              </Box>
+              <Box sx={{ flexGrow: 1 }} />
+            </Box>
 
-                <Grid container spacing={3}>
+            <Card elevation={0} sx={{ backgroundColor: "#F0F1F1", margin: "20px" }}>
+              <CardContent sx={{ display: "flex", padding: 0, justifyContent: "space-between", gap: 15, backgroundColor: "#F0F1F1",  }}>
+                <Box sx={{ flexBasis: "30%", maxWidth: "30%" }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Tài khoản nhân viên
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "#6B7280", marginTop: "4px" }}>
+                    Thông tin tài khoản, phân quyền của nhân viên
+                  </Typography>
+                </Box>
+                <Box
+                    sx={{
+                      flexBasis: "70%",
+                      maxWidth: "70%",
+                      border: "1px solid #ccc",
+                      borderRadius: "12px",
+                      padding: 3, backgroundColor: "white"
+                    }}
+                >
+                <Grid container spacing={2}>
                   <Grid item xs={6}>
-                    <Typography>Tên nhân viên : </Typography>
+                    <Typography variant="body1" sx={{ fontWeight: "bold" }}>Tên nhân viên : </Typography>
                     <TextField
                       fullWidth
                       name="name"
+                      variant="outlined"
                       value={formData.name}
                       onChange={handleInputChange}
                       required
                       error={!!nameError}
                       helperText={nameError}
                     />
+
+                    <Typography variant="body1" sx={{marginTop: 2, fontWeight: "bold" }}>Email :</Typography>
+                    <TextField
+                        fullWidth
+                        name="email"
+                        variant="outlined"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        error={!!emailError}
+                        helperText={emailError}
+                    />
+                    <Typography variant="body1" sx={{marginTop: 2, fontWeight: "bold" }}>Địa chỉ</Typography>
+                    <TextField
+                        fullWidth
+                        name="address"
+                        variant="outlined"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        required
+                    />
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography>Vai trò</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: "bold" }}>Số điện thoại :</Typography>
+                    <TextField
+                        fullWidth
+                        name="phoneNumber"
+                        variant="outlined"
+                        value={formData.phoneNumber}
+                        onChange={handleInputChange}
+                        required
+                        error={!!phoneNumberError}
+                        helperText={phoneNumberError}
+                    />
+
+                    <Typography variant="body1" sx={{marginTop: 2, fontWeight: "bold" }}>Vai trò</Typography>
                     <FormControl fullWidth>
                       <Select
-                        value={role}
-                        onChange={handleRoleChange}
-                        label="Vai trò"
-                        required
+                          value={role}
+                          onChange={handleRoleChange}
+                          label="Vai trò"
+                          required
                       >
                         {roleOptions.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
-                  </Grid>
 
-                  <Grid item xs={6}>
-                    <Typography>Email :</Typography>
-                    <TextField
-                      fullWidth
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      error={!!emailError}
-                      helperText={emailError}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Typography>Địa chỉ</Typography>
-                    <TextField
-                      fullWidth
-                      name="address"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography>Số điện thoại :</Typography>
-                    <TextField
-                      fullWidth
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      required
-                      error={!!phoneNumberError}
-                      helperText={phoneNumberError}
-                    />
-                  </Grid>
-
-                  <Grid item xs={6}>
-                    <Typography>Ngày sinh :</Typography>
+                    <Typography variant="body1" sx={{marginTop: 2, fontWeight: "bold" }}>Ngày sinh :</Typography>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
-                        format="DD/MM/YYYY"
-                        value={birthDay}
-                        onChange={handleDateChange}
+                          format="DD/MM/YYYY"
+                          value={birthDay}
+                          onChange={handleDateChange}
                       />
                     </LocalizationProvider>
                   </Grid>
+
                 </Grid>
+                </Box>
+
               </CardContent>
             </Card>
+            <Box sx={{
+              display: "flex",               // thêm dòng này
+              justifyContent: "flex-end", gap: 2,
+              fontWeight: 600,
+              fontSize: "30px",
+              color: "#0F172A",
+              margin: "20px",
+              borderTop: "1px solid #E5E7EB",
+              paddingTop: "20px",
+              marginTop: "20px",
+            }}>
+              <Button
+                  variant="outlined"
+                  color="inherit"
+                  onClick={() => {
+                    setFormData({
+                      name: initialData.name,
+                      email: initialData.email,
+                      phoneNumber: initialData.phoneNumber,
+                      address: initialData.address,
+                      status: initialData.status,
+                    });
+                    setBirthDay(initialData.birthDay);
+                    setRole(initialData.role);
+                    setNameError("");
+                    setEmailError("");
+                    setPhoneNumberError("");
+                  }}
+                  disabled={!isFormChanged()}
+              >
+                Huỷ
+              </Button>
+              <Button
+                  sx={{}}
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  disabled={!isFormChanged()}
+              >
+                Lưu thay đổi
+              </Button>
+            </Box>
           </Box>
         )}
-      </Box>
+      </MainBox>
     </Box>
   );
 };

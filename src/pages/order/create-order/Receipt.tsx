@@ -51,6 +51,10 @@ export const ReceiptToPrint = React.forwardRef<HTMLDivElement, ReceiptProps>((_p
       </Box>
       <Box sx={{ mt: 2 }}>
         <Box display="flex" justifyContent="space-between">
+          <Typography variant="h6">Hình thức thanh toán</Typography>
+          <Typography variant="body1">{order.paymentType === "CASH" ? "Tiền mặt" : "Quét mã QR"}</Typography>
+        </Box>
+        <Box display="flex" justifyContent="space-between">
           <Typography variant="h6">Tổng tiền</Typography>
           <Typography variant="body1">{formatCurrency(order.totalPayment)}</Typography>
         </Box>

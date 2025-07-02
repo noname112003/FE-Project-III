@@ -30,6 +30,7 @@ import ForgotPasswordPage from "../pages/login/ForgotPasswordPage.tsx";
 import Login from "../pages/login/Login.tsx"
 import StoreSetting from "../pages/store/StoreSetting.tsx";
 import UpdateOrderPage from "../pages/order/create-order/UpdateOrderPage.tsx";
+import NewUserProfile from "../pages/admin/NewUserProfile.tsx";
 
 export const router = createBrowserRouter([
   // {
@@ -132,6 +133,10 @@ export const router = createBrowserRouter([
           },
           {
             path: "account/:id",
+            element: <NewUserProfile />,
+          },
+          {
+            path: "account/v2/:id",
             element: <UserProfile />,
           },
           {

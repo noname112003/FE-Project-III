@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["qrcode.react"],
     "target": "esnext",               // Chọn mức độ ECMAScript bạn muốn sử dụng
     "module": "esnext",               // Sử dụng mô-đun ES6+
     "moduleResolution": "node",       // Giải quyết mô-đun theo cách Node.js

@@ -11,7 +11,7 @@ export default function MainBox({ children }: Props) {
     return (
         <Box
             component="main"
-            sx={{ backgroundColor: "#F0F1F1", height: "100vh" }}
+            sx={{ backgroundColor: "#F0F1F1", height: "100vh", fontFamily: "Arial" }}
         >
             <Toolbar />
             {children}

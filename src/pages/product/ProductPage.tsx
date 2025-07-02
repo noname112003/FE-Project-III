@@ -103,7 +103,7 @@ export default function ProductPage({}: Props) {
                                         <TableCell style={{ width: "8%" }}>
                                             Ảnh
                                         </TableCell>
-                                        <TableCell style={{ width: "32%" }}>
+                                        <TableCell style={{ width: "22%" }}>
                                             Tên sản phẩm
                                         </TableCell>
                                         <TableCell style={{ width: "15%" }}>
@@ -112,11 +112,14 @@ export default function ProductPage({}: Props) {
                                         <TableCell style={{ width: "15%" }}>
                                             Nhãn hiệu
                                         </TableCell>
-                                        <TableCell style={{ width: "15%" }}>
+                                        <TableCell style={{ width: "10px" }}>
                                             Tồn kho
                                         </TableCell>
                                         <TableCell style={{ width: "15%" }}>
                                             Ngày khởi tạo
+                                        </TableCell>
+                                        <TableCell style={{ width: "15%" }}>
+                                            Ngày cập nhật
                                         </TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -196,6 +199,9 @@ export default function ProductPage({}: Props) {
                                                 </TableCell>
                                                 <TableCell>
                                                     {row.createdOn ? formatDate(row.createdOn.toString()) : "N/A"}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.updatedOn ? formatDate(row.updatedOn.toString()) : "N/A"}
                                                 </TableCell>
                                             </TableRow>
                                         ))

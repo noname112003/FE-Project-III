@@ -57,6 +57,7 @@ const getOrderDetailV2 = async (orderCode: string | undefined): Promise<any> => 
 const createOrder = async (order: any): Promise<any> => {
     return await apiClient.post(`${BASE_URL}/create`, order);
 }
+
 const updateOrder = async (order: any, id: number | undefined): Promise<any> => {
     return await apiClient.put(`${BASE_URL}/update/${id}`, order);
 }
@@ -79,4 +80,31 @@ const getTodayOrders = async (storeId: number, pageNum: number, pageSize: number
     }
 };
 
-export { createOrder, getAllOrders, getNumberOfOrders, getOrderDetail, getTodayOrders, getOrderDetailV2, updateOrder };
+
+export interface CreatePaymentLinkRequestBody {
+    productName: string;
+    description: string;
+    returnUrl: string;
+    price: number;
+    cancelUrl: string;
+}
+
+const createPaymentLink = async (body: CreatePaymentLinkRequestBody) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/create-payment-link`, body);
+        return response.data;
+    } catch (error: any) {
+        console.error('Failed to create payment link:', error);
+        throw error;
+    }
+};
+const getPaymentLink = async (orderId: number) => {
+    const response = await axios.get(`${BASE_URL}/get-payos/${orderId}`);
+    return response.data;
+};
+
+const cancelPaymentLink = async (orderId: number) => {
+    const response = await axios.put(`${BASE_URL}/${orderId}`);
+    return response.data;
+};
+export { createOrder, getAllOrders, getNumberOfOrders, getOrderDetail, getTodayOrders, getOrderDetailV2, updateOrder, createPaymentLink, getPaymentLink, cancelPaymentLink };

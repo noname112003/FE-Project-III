@@ -33,10 +33,10 @@ type Props = {};
 
 // Role options that match backend roles
 const roleOptions = [
-  { value: "ROLE_ADMIN", label: "ADMIN" },
-  // { value: "ROLE_REPOSITORY", label: "NHÂN VIÊN KHO" },
+  // { value: "ROLE_ADMIN", label: "ADMIN" },
+  { value: "ROLE_REPOSITORY", label: "NHÂN VIÊN KHO" },
   { value: "ROLE_SALE", label: "NHÂN VIÊN BÁN HÀNG" },
-  { value: "ROLE_SUPPORT", label: "NHÂN VIÊN CHĂM SÓC" },
+  // { value: "ROLE_SUPPORT", label: "NHÂN VIÊN CHĂM SÓC" },
 ];
 
 export default function CreateUser({}: Props) {
@@ -77,45 +77,7 @@ export default function CreateUser({}: Props) {
     setBirthDay(newValue);
   };
 
-  // Function to check if email and phone number are unique
-  const checkEmail = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/v1/user/check-email/${formData.email}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
 
-      const result = await response.json();
-
-      if (response.ok && result.status === "OK") {
-        // Email exists, show error message
-        setEmailError("Email đã tồn tại");
-        return false;
-      } else if (
-        result.status === "INTERNAL_SERVER_ERROR" ||
-        result.message === "Email không được tìm thấy"
-      ) {
-        // Email not found, reset error
-        setEmailError("");
-        return true;
-      } else {
-        // Handle any other error case
-        setEmailError("Có lỗi xảy ra khi kiểm tra email");
-        return false;
-      }
-    } catch (error) {
-      console.error("Error checking uniqueness:", error);
-      setEmailError("Lỗi kết nối. Vui lòng thử lại");
-      return false;
-    }
-  };
-
-  // Function to validate email format
   const validateEmailFormat = (email: string): boolean => {
     // Regex for validating email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -213,11 +175,6 @@ const validatePhoneNumber = (phoneNumber: string): boolean => {
     setEmailError("");
     setPhoneNumberError("");
 
-    // Check if email and phone number are unique
-    const isUnique = await checkEmail();
-    if (!isUnique) return; // Stop submission if email or phone is not unique
-    // const isUniquePhoneNumber = await checkPhoneNumber();
-    // if (!isUniquePhoneNumber) return;
 
     const user = {
       ...formData,
@@ -238,9 +195,16 @@ const validatePhoneNumber = (phoneNumber: string): boolean => {
       if (response.ok) {
         toast.success('Tạo tài khoản thành công!');
         navigate(`/admin/user/${result.id}`);
-        console.log("User created successfully:", result);
+
       } else {
-        console.error("Lỗi khi tạo tài khoản:", result);
+        // xử lý lỗi từ backend
+        if (result.message?.includes("Email")) {
+          setEmailError(result.message);
+        } else if (result.message?.includes("Số điện thoại")) {
+          setPhoneNumberError(result.message);
+        } else {
+          toast.error(result.message || "Đã xảy ra lỗi.");
+        }
       }
     } catch (error) {
       console.error("Lỗi:", error);

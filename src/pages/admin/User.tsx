@@ -27,10 +27,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 import MainBox from "../../components/layout/MainBox.tsx";
 import Header from "../../components/layout/Header.tsx";
 import {useSelector} from "react-redux";
-interface Role {
-  id: number;
-  name: string;
-}
+// interface Role {
+//   id: number;
+//   name: string;
+// }
 interface User {
   id: number;
   name: string;
@@ -38,7 +38,7 @@ interface User {
   phoneNumber: string;
   address: string;
   status: boolean;
-  roles: Role[];
+  roles: string[];
   createdOn: string;
   updateOn: string | null;
 }
@@ -168,9 +168,9 @@ export default function User({}: Props) {
 
   };
   const roleMap: Record<string, string> = {
-    ROLE_ADMIN: "Admin",
-    ROLE_SUPPORT: "Nhân viên CSKH",
-    ROLE_SALE: "Nhân viên bán hàng",
+    // ROLE_ADMIN: "Admin",
+    ROLE_REPOSITORY: "NHÂN VIÊN KHO",
+    ROLE_SALE: "NHÂN VIÊN BÁN HÀNG",
     // Thêm các role khác nếu có
   };
   
@@ -257,10 +257,10 @@ export default function User({}: Props) {
                   onChange={handleRoleChange}
               >
                 <MenuItem value="">Tất cả vai trò</MenuItem>
-                <MenuItem value="ROLE_ADMIN">ADMIN</MenuItem>
-                {/*<MenuItem value="ROLE_REPOSITORY">NHÂN VIÊN KHO</MenuItem>*/}
+                {/*<MenuItem value="ROLE_ADMIN">ADMIN</MenuItem>*/}
+                <MenuItem value="ROLE_REPOSITORY">NHÂN VIÊN KHO</MenuItem>
                 <MenuItem value="ROLE_SALE">NHÂN VIÊN BÁN HÀNG</MenuItem>
-                <MenuItem value="ROLE_SUPPORT">NHÂN VIÊN CHĂM SÓC</MenuItem>
+                {/*<MenuItem value="ROLE_SUPPORT">NHÂN VIÊN CHĂM SÓC</MenuItem>*/}
               </Select>
 
               <Button
@@ -356,9 +356,9 @@ export default function User({}: Props) {
                                 <TableCell>{user.name}</TableCell>
                                 <TableCell>{user.phoneNumber}</TableCell>
                                 <TableCell>
-                                  {(user.roles && user.roles.length > 0)
-                                      ? user.roles.map(role => roleMap[role.name] || role.name).join(", ")
-                                      : "Không có quyền"}
+                                  {user.roles && user.roles.length > 0
+                                      ? user.roles.map((r) => roleMap[r] || r).join(", ")
+                                      : "Không có vai trò"}
                                 </TableCell>
                                 <TableCell>
                                   <Chip

@@ -5,7 +5,7 @@ type Props = {}
 export default function CustomerRoute({ }: Props) {
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  if (user.roles[0] === "ROLE_SUPPORT" || user.roles[0] === "ROLE_ADMIN") {
+  if (user.roles[0] === "ROLE_REPOSITORY" || user.roles[0] === "ROLE_ADMIN" || user.roles[0] === "ROLE_SALE") {
     return <Outlet />
   } else {
     return <Navigate to="/accessdenied" />

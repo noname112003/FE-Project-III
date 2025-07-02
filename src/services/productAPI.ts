@@ -34,7 +34,7 @@ const getListOfProducts = async (
     storeId: number,
 ): Promise<ProductResponse[]> => {
     try {
-        const response = await apiClient.get(`${BASE_URL}`, {
+        const response = await apiClient.get(`${BASE_URL}/v2`, {
             params: {
                 page: page,
                 limit: limit,

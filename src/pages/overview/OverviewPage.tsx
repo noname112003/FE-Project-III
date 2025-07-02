@@ -10,6 +10,7 @@ import shoppingBag from '../../assets/shopping-bag.jpg';
 import Header from "../../components/layout/Header.tsx";
 import  "../styles.css"
 import {useSelector} from "react-redux";
+import OrderChart from "./OrderChart.tsx";
 
 export default function OverviewPage() {
   const [pageNum, setPageNum] = useState<number>(0);
@@ -34,7 +35,9 @@ export default function OverviewPage() {
 
 
   useEffect(() => {
-    fetchTodayOrders();
+    if(store && store?.id) {
+      fetchTodayOrders();
+    }
   }, [pageNum, pageSize,store]);
   const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPageNum(newPage);
@@ -119,7 +122,7 @@ export default function OverviewPage() {
                 fontFamily: '"Segoe UI", sans-serif', // Phông chữ
                 fontSize: '26px', // Kích thước chữ
                 fontStyle: 'normal', // Kiểu chữ
-                fontWeight: 600, // Độ đậm của chữ
+                fontWeight: 500, // Độ đậm của chữ
                 lineHeight: 'normal', // Chiều cao dòng
                 paddingBottom: '30px'
               }}  >Đơn hàng mới</Typography>
@@ -152,7 +155,7 @@ export default function OverviewPage() {
                         <TableCell>{formatDate(order.createdOn)}</TableCell>
                         <TableCell sx={{ paddingLeft: '5%' }}>{order.totalQuantity}</TableCell>
                         <TableCell>{formatCurrency(order.totalPayment)}</TableCell>
-                        <TableCell>{order.paymentType === "CASH" ? "COD" : null}</TableCell>
+                        <TableCell>{order.paymentType === "CASH" ? "Tiền mặt" : "Quét mã QR"}</TableCell>
 
                       </TableRow>
                     ))
@@ -179,6 +182,7 @@ export default function OverviewPage() {
               />
             </Box>
           </Box>
+          <OrderChart/>
         </Box>
       </MainBox>
     </Box>

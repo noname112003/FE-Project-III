@@ -113,7 +113,7 @@ export default function DetailOrderPage({ }: Props) {
           <Typography variant="h6" sx={{ color: '#000', fontWeight: '600' }} mb={2}>Thông tin thanh toán</Typography>
           {order ? <Box>
             <Typography variant="body1" sx={{ color: '#000' }} mb={2}>Tổng tiền: {formatCurrency(order.totalPayment)}</Typography>
-            <Typography variant="body1" sx={{ color: '#000' }}>Phương thức thanh toán: {order.paymentType === "CASH" ? "COD" : null}</Typography>
+            <Typography variant="body1" sx={{ color: '#000' }}>Phương thức thanh toán: {order.paymentType === "CASH" ? "Tiền mặt" : "Quét mã QR"}</Typography>
           </Box> : 
           <Box>
             <Skeleton variant="text" />

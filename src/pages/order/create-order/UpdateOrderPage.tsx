@@ -11,7 +11,12 @@ import { formatCurrency } from "../../../utils/formatCurrency"
 import OrderDetail from "../../../models/OrderDetail"
 import { toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
-import { getOrderDetailV2, updateOrder} from "../../../services/orderAPI"
+import {
+    cancelPaymentLink,
+    createPaymentLink,
+    CreatePaymentLinkRequestBody,
+    getOrderDetailV2, updateOrder,
+} from "../../../services/orderAPI"
 import { LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -23,6 +28,8 @@ import { NumericFormat } from "react-number-format"
 import { useSelector} from "react-redux";
 import {VariantResponse} from "../../../models/ProductInterface.tsx";
 import Order from "../../../models/Order.ts";
+import QRCodeDisplay from "./QRCodeDisplay.tsx";
+import UpdateOrderAppBar from "./UpdateOrderAppBar.tsx";
 
 
 type VariantTableRowProps = {
@@ -190,8 +197,15 @@ export default function UpdateOrderPage({ }: Props) {
     const [totalQuantity, setTotalQuantity] = useState<number>(0);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [cashReceived, setCashReceived] = useState<number>(0);
+    const [newCashReceived, setNewCashReceived] = useState<number>(0);
     const [note, setNote] = useState<string>('');
     const [doesCreatingOrder, setDoesCreatingOrder] = useState<boolean>(false);
+    const [paymentMethod, setPaymentMethod] = useState<string>('CASH');
+    const [openQR, setOpenOR] = useState<boolean>(false);
+    const [orderIdPayos, setOrderIdPayos] = useState<number>(0);
+    const [accountNumber, setAccountNumber] = useState<string>("");
+    const [accountName, setAccountName] = useState<string>("");
+    const [descreiption, setDescreiption] = useState<string>("");
     const [newOrderReceipt, setNewOrderReceipt] = useState<any>({
         createdOn: "",
         creatorId: 0,
@@ -200,9 +214,12 @@ export default function UpdateOrderPage({ }: Props) {
         total: 0,
         cashReceive: 0,
         cashRepay: 0,
-        note: ""
+        note: "",
+        paymentType: ""
     });
-
+    const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPaymentMethod(event.target.value);
+    };
     const [order, setOrder] = useState<Order>();
     useEffect(() => {
         getOrderDetailV2(id).then((res) => {
@@ -216,6 +233,7 @@ export default function UpdateOrderPage({ }: Props) {
                 setOrderDetailList([]); // Nếu không có orderDetails thì để mảng rỗng
             }
             setCashReceived(res.data.cashReceive);
+            setPaymentMethod(res.data.paymentType);
             getCustomerById(res.data.customerId).then((res) => {
                 if (res) {
                     setSelectedCustomer(res);
@@ -258,8 +276,41 @@ export default function UpdateOrderPage({ }: Props) {
         setTotalQuantity(totalQuantity);
         setTotalPrice(totalPrice);
     }, [orderDetailList]);
+    const submitOrderToServer = async () => {
+        const isCashPayment = paymentMethod === "CASH"; // Kiểm tra nếu phương thức thanh toán là "CASH"
 
-    const handleUpdateOrder = () => {
+        const newOrder = {
+            customerId: selectedCustomer?.id,
+            storeId: store.id,
+            creatorId: JSON.parse(localStorage.getItem('user') || '{}').id,
+            totalQuantity: totalQuantity,
+            note: note,
+            cashReceive: isCashPayment ? cashReceived : totalPrice, // Nếu là thanh toán tiền mặt, dùng cashReceived, nếu quét mã QR, cashReceive = totalPrice
+            cashRepay: isCashPayment ? (cashReceived - totalPrice) : 0, // Nếu thanh toán tiền mặt, tính tiền trả lại, nếu quét mã QR, cashRepay = 0
+            totalPayment: totalPrice,
+            paymentType: paymentMethod, // Chuyển paymentMethod từ radio vào order
+            orderLineItems: orderDetailList.map((orderDetail) => {
+                return {
+                    variantId: orderDetail.variantId,
+                    quantity: orderDetail.quantity,
+                    subTotal: orderDetail.quantity * orderDetail.price
+                }
+            }),
+        }
+        try {
+            const res = await updateOrder(newOrder, order?.id);
+            toast.success("Cập nhật đơn hàng thành công");
+            setNewOrderReceipt(res.data.data);
+            setTimeout(() => {
+                handlePrint(); // In hoá đơn nếu cần
+            }, 1000);
+            setDoesCreatingOrder(false);
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Cập nhật đơn hàng thất bại");
+            setDoesCreatingOrder(false);
+        }
+    };
+    const handleUpdateOrder = async () => {
         if (!selectedCustomer) {
             toast.error("Vui lòng chọn khách hàng");
             return;
@@ -268,7 +319,9 @@ export default function UpdateOrderPage({ }: Props) {
             toast.error("Vui lòng chọn sản phẩm");
             return;
         }
-        if (cashReceived < totalPrice) {
+        const isCashPayment = paymentMethod === "CASH"; // Kiểm tra nếu phương thức thanh toán là "CASH"
+
+        if (isCashPayment && newCashReceived < totalPrice - (order?.totalPayment ?? 0)) {
             toast.error("Số tiền nhận của khách không đủ");
             return;
         }
@@ -278,10 +331,10 @@ export default function UpdateOrderPage({ }: Props) {
             creatorId: JSON.parse(localStorage.getItem('user') || '{}').id,
             totalQuantity: totalQuantity,
             note: note,
-            cashReceive: cashReceived,
-            cashRepay: cashReceived - totalPrice,
+            cashReceive:  totalPrice,
+            cashRepay:  0,
             totalPayment: totalPrice,
-            paymentType: "CASH",
+            paymentType: paymentMethod, // Chuyển paymentMethod từ radio vào order
             orderLineItems: orderDetailList.map((orderDetail) => {
                 return {
                     variantId: orderDetail.variantId,
@@ -291,17 +344,59 @@ export default function UpdateOrderPage({ }: Props) {
             }),
         }
         setDoesCreatingOrder(true);
-        updateOrder(newOrder, order?.id).then((res) => {
-            toast.success("Update đơn hàng thành công");
-            setNewOrderReceipt(res.data.data);
-            setTimeout(() => {
-                handlePrint();
-            }, 1000);
-            setDoesCreatingOrder(false);
-            // navigate('/order')
-        }).catch((error) => {
-            toast.error(error.response.data.message);
-        });
+        if(paymentMethod === "CASH") {
+            updateOrder(newOrder, order?.id).then((res) => {
+                toast.success("Cập nhật đơn hàng thành công");
+                setNewOrderReceipt(res.data.data);
+                setTimeout(() => {
+                    handlePrint();
+                }, 1000);
+                setDoesCreatingOrder(false);
+                // navigate('/order')
+            }).catch((error) => {
+                toast.error(error.response.data.message);
+            });
+        } else {
+            const paymentRequest: CreatePaymentLinkRequestBody = {
+                productName: "",
+                description: `Thanh toán đơn hàng`,
+                returnUrl: "",
+                cancelUrl: "",
+                price: totalPrice - (order?.totalPayment ?? 0)
+            };
+
+            try {
+                const payRes = await createPaymentLink(paymentRequest);
+
+                if (payRes?.data?.orderCode) {
+                    setOrderIdPayos(payRes.data.orderCode);
+                    setDescreiption(payRes.data.description);
+                    setAccountNumber(payRes.data.accountNumber);
+                    setAccountName(payRes.data.accountName);
+                    setOpenOR(true); // mở QR Modal
+                } else {
+                    toast.error("Không thể tạo link thanh toán");
+                    setDoesCreatingOrder(false);
+                }
+            } catch (error) {
+                toast.error("Lỗi tạo link thanh toán");
+                console.error(error);
+                setDoesCreatingOrder(false);
+            }
+        }
+    }
+
+    const handleCancelOrder = async (orderId: number) => {
+        if (!orderId) return;
+        try {
+            const result = await cancelPaymentLink(orderId);
+            setOpenOR(false);
+            setDoesCreatingOrder(false)
+            console.log(result);
+        } catch (error) {
+            console.error('Failed to cancel order:', error);
+            setDoesCreatingOrder(false)
+        }
     }
 
     return (
@@ -309,6 +404,7 @@ export default function UpdateOrderPage({ }: Props) {
             <Box display="none">
                 <ReceiptToPrint ref={receiptRef} order={newOrderReceipt}/>
             </Box>
+            <UpdateOrderAppBar/>
             {/*<CreateOrderAppBar handleCreateOrder={handleCreateOrder} doesCreatingOrder={doesCreatingOrder}/>*/}
             <Box sx={{ backgroundColor: '#F0F1F1', padding: '25px 30px' }} flex={1} display='flex' flexDirection='column'>
                 <NewCustomerDialog open={openAddCustomerDialog} handleClose={() => setOpenAddCustomerDialog(false)} />
@@ -462,29 +558,98 @@ export default function UpdateOrderPage({ }: Props) {
                         <Typography variant="body1" sx={{ color: '#000' }}>Tổng tiền</Typography>
                         <Typography variant="body1" sx={{ color: '#000' }}>{formatCurrency(totalPrice)}</Typography>
                     </Box>
-                    <Box mt={2} display="flex" alignItems="center">
+                    <Box mt={2} display="flex" flexDirection="column" alignItems="flex-start">
                         <Typography variant="body1" sx={{ color: '#000' }} marginRight={2}>Phương thức thanh toán</Typography>
-                        <Button variant="outlined">COD</Button>
+
+                        <RadioGroup
+
+                            value={paymentMethod}
+                            onChange={handlePaymentMethodChange}
+                            aria-labelledby="payment-method-group"
+                            name="payment-method"
+                        >
+                            <FormControlLabel
+                                value="CASH"
+                                control={<Radio />}
+                                label="Thanh toán bằng tiền mặt"
+                            />
+                            <FormControlLabel
+                                value="QR"
+                                control={<Radio />}
+                                label="Thanh toán quét mã QR"
+                            />
+                        </RadioGroup>
                     </Box>
-                    <Box width='40%' display="flex" alignItems="center">
-                        <Typography variant="body1" sx={{ color: '#000' }} mt={2} marginRight={2}>Tiền nhận của khách</Typography>
-                        <NumericFormat
-                            customInput={TextField}
-                            value={cashReceived}
-                            onValueChange={(values) => {
-                                const {value} = values;
-                                setCashReceived(Number(value));
-                            }}
-                            thousandsGroupStyle="thousand"
-                            thousandSeparator="."
-                            decimalSeparator=","
-                            style={{ marginTop: '8px', width: '200px' }}
-                        />
+                    <Box>
+                        <Box width='40%' display="flex" justifyContent="space-between" mt={2}>
+                            <Typography variant="body1" sx={{ color: '#000' }}>Tiền đã nhận của khách</Typography>
+                            <Typography variant="body1" sx={{ color: '#000' }}>{formatCurrency(order?.totalPayment || 0)}</Typography>
+                        </Box>
+
+                        <Box width='40%' display="flex" justifyContent="space-between" mt={2}>
+                            <Typography variant="body1" sx={{ color: '#000' }}>Số tiền cần thanh toán:</Typography>
+                            <Typography variant="body1" sx={{ color: '#000' }}>{formatCurrency(totalPrice - (order?.totalPayment ?? 0))}</Typography>
+                        </Box>
                     </Box>
-                    <Box width='40%' display="flex" justifyContent="space-between" mt={2}>
-                        <Typography variant="body1" sx={{ color: '#000' }}>Tiền thừa</Typography>
-                        <Typography variant="body1" sx={{ color: '#000' }}>{formatCurrency(cashReceived - totalPrice)}</Typography>
-                    </Box>
+                    {
+                        paymentMethod === "CASH" ?
+                            (
+                                <Box>
+                                    <Box width='40%' display="flex" alignItems="center">
+                                        <Typography variant="body1" sx={{ color: '#000' }} mt={2} marginRight={2}>Tiền khách trả:</Typography>
+                                        <NumericFormat
+                                            customInput={TextField}
+                                            value={newCashReceived}
+                                            onValueChange={(values) => {
+                                                const {value} = values;
+                                                setNewCashReceived(Number(value));
+                                            }}
+                                            thousandsGroupStyle="thousand"
+                                            thousandSeparator="."
+                                            decimalSeparator=","
+                                            style={{ marginTop: '8px', width: '200px' }}
+                                        />
+                                    </Box>
+                                    <Box width='40%' display="flex" justifyContent="space-between" mt={2}>
+                                        <Typography variant="body1" sx={{ color: '#000' }}>Tiền thừa: </Typography>
+                                        <Typography variant="body1" sx={{ color: '#000' }}>{formatCurrency(newCashReceived - totalPrice + (order?.totalPayment ?? 0))}</Typography>
+                                    </Box>
+                                </Box>
+                            ) : null
+                    }
+
+                    {/*}*/}
+                    {/*{*/}
+                    {/*    paymentMethod === "QR" ?*/}
+                    {/*        (*/}
+                    {/*            <Box>*/}
+                    {/*                <Box width='40%' display="flex" justifyContent="space-between" mt={2}>*/}
+                    {/*                    <Typography variant="body1" sx={{ color: '#000' }}>Tổng tiền đơn cũ: </Typography>*/}
+                    {/*                    <Typography variant="body1" sx={{ color: '#000' }}>{formatCurrency(order?.totalPayment || 0)}</Typography>*/}
+                    {/*                </Box>*/}
+                    {/*                <Box width='40%' display="flex" justifyContent="space-between" mt={2}>*/}
+                    {/*                    <Typography variant="body1" sx={{ color: '#000' }}>Số tiền cần thanh toán: </Typography>*/}
+                    {/*                    <Typography variant="body1" sx={{ color: '#000' }}>{formatCurrency(totalPrice - (order?.totalPayment ?? 0))}</Typography>*/}
+                    {/*                </Box>*/}
+                    {/*            </Box>*/}
+                    {/*        ) : null*/}
+                    {/*}*/}
+
+                    <QRCodeDisplay
+                        isOpen={openQR}
+                        descreiption={descreiption}
+                        orderId={orderIdPayos}
+                        onClose={() => {
+                            setOpenOR(false);
+                            setDoesCreatingOrder(false);
+                        }}
+                        handleCancelOrder={handleCancelOrder}
+                        accountNumber={accountNumber}
+                        amount={totalPrice - (order?.totalPayment ?? 0)}
+                        accountName={accountName}
+                        createOrderFn={submitOrderToServer}
+                    />
+
                 </Box>
                 <Box mt={2} display="flex" justifyContent="flex-end">
                     {!doesCreatingOrder ?
