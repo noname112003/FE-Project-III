@@ -31,6 +31,8 @@ import Login from "../pages/login/Login.tsx"
 import StoreSetting from "../pages/store/StoreSetting.tsx";
 import UpdateOrderPage from "../pages/order/create-order/UpdateOrderPage.tsx";
 import NewUserProfile from "../pages/admin/NewUserProfile.tsx";
+import StoreList from "../pages/store/ListStorePage.tsx";
+import CreateStore from "../pages/store/CreateStore.tsx";
 
 export const router = createBrowserRouter([
   // {
@@ -175,6 +177,20 @@ export const router = createBrowserRouter([
                 path: "",
                 element: <StoreSetting />,
               },
+            ]
+          },
+          {
+            path: "/stores",
+            element: <AdminRoute />,
+            children: [
+              {
+                path: "",
+                element: <StoreList />,
+              },
+              {
+                path: "create",
+                element: <CreateStore/>
+              }
             ]
           },
           {

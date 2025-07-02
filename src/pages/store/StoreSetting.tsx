@@ -8,17 +8,14 @@ import  { useEffect, useState } from "react";
 
 import Header from "../../components/layout/Header.tsx";
 import  "../styles.css"
-import {useDispatch, useSelector} from "react-redux";
+import { useSelector} from "react-redux";
 import {toast} from "react-toastify";
-import {getStores} from "../../services/storeAPI.ts";
-import {setStores} from "../../reducers/storesReducer.tsx";
-import {setStore} from "../../reducers/storeSettingReducer.tsx";
 
 
 export default function StoreSetting() {
     const store = useSelector((state: any) => state.storeSetting.store);
-    const user = JSON.parse(localStorage.getItem("user") as string);
-    const dispatch = useDispatch();
+    // const user = JSON.parse(localStorage.getItem("user") as string);
+    // const dispatch = useDispatch();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -28,7 +25,8 @@ export default function StoreSetting() {
         district: "",
         ward: "",
         businessType: "",
-        currency: ""
+        currency: "",
+        status: true
     });
 
     useEffect(() => {
@@ -41,19 +39,37 @@ export default function StoreSetting() {
                 district: store.district || "",
                 ward: store.ward || "",
                 businessType: store.businessType || "",
-                currency: store.currency || ""
+                currency: store.currency || "",
+                status: true
             });
         }
     }, [store]);
-    const fetchStores = async () => {
-        const storesData = await getStores(Number(user.id));
-        dispatch(setStores(storesData));
-        dispatch(setStore(storesData[0]));
+    const updateStore = async (storeId: number, storeData: any) => {
+        const response = await fetch(`http://localhost:8080/v1/stores/${storeId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(storeData),
+        });
+
+        if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.message || "Cập nhật cửa hàng thất bại");
+        }
+
+        return response.json(); // Trả về dữ liệu mới sau khi cập nhật
     };
+    // const fetchStores = async () => {
+    //     const storesData = await getStores(Number(user.id));
+    //     dispatch(setStores(storesData));
+    //     dispatch(setStore(storesData[0]));
+    // };
     const handleSave = async () => {
         try {
             // const response = await axios.put(`http://localhost:8080/v1/stores/${store.id}`, formData);
-            await fetchStores();
+            // await fetchStores();
+            await updateStore(store.id, formData);
             toast.success("Cập nhật thông tin cửa hàng thành công!");
 
         } catch (error) {

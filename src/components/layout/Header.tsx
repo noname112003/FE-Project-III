@@ -39,6 +39,7 @@ export default function Header() {
                     <Typography variant="h6" sx={{ color: '#000', fontWeight: '600' }}>{user.name}</Typography>
                     <Select sx={{ '.MuiOutlinedInput-notchedOutline': { borderStyle: 'none' } }}>
                         <MenuItem onClick={() => navigate(`/account/${user.id}`)}>Thông tin tài khoản</MenuItem>
+                        <MenuItem onClick={() => navigate(`/store`)}>Cửa hàng</MenuItem>
                         <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                     </Select>
                 </Box>}

@@ -16,13 +16,13 @@ import {useEffect, useState} from "react";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import HomeIcon from '@mui/icons-material/Home';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import SettingsIcon from '@mui/icons-material/Settings';
 import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from "react-router-dom";
 import logo from '../../assets/logo.webp';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import {setStore} from "../../reducers/storeSettingReducer.tsx";
 import {useDispatch, useSelector} from "react-redux";
+import StorefrontIcon from '@mui/icons-material/Storefront';
 
 type Props = {}
 
@@ -213,7 +213,7 @@ export default function HomeDrawer({ }: Props) {
       </List>
         <Divider />
         <List>
-          <DrawerItem name="Cài đặt" icon={<SettingsIcon style={{ color: '#fff' }} />} link="/store" />
+          <DrawerItem name="Quản lý chi nhánh" icon={<StorefrontIcon style={{ color: '#fff' }} />} link="/stores" />
         </List>
       </Box>
     </Drawer>
