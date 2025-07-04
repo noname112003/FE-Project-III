@@ -6,6 +6,7 @@ export interface ProductResponse {
     brandId: number;
     brandName: string;
     description: string;
+    stock: number;
     totalQuantity: number;
     status: boolean;
     size: string[];
@@ -26,6 +27,7 @@ export const initialProductResponse = {
     brandName: "",
     description: "",
     totalQuantity: 0,
+    stock: 0,
     status: false,
     size: [],
     color: [],
@@ -46,6 +48,7 @@ export interface VariantResponse {
     productName: string;
     sku: string;
     quantity: number;
+    stock: number;
     status: boolean;
     size: string;
     color: string;
@@ -65,6 +68,7 @@ export const initialVariantResponse = {
     productName: "",
     sku: "",
     quantity: 0,
+    stock: 0,
     status: true,
     size: "",
     color: "",
@@ -86,6 +90,7 @@ export interface ProductRequest {
     createdOn: Date;
     updatedOn: Date;
     totalQuantity: number;
+    stock: number;
     status: boolean;
     variants: VariantRequest[];
 }
@@ -98,6 +103,7 @@ export const initialProductRequest = {
     createdOn: new Date(),
     updatedOn: new Date(),
     totalQuantity: 0,
+    stock: 0,
     variants: [],
     status: true,
 };
@@ -107,6 +113,7 @@ export interface VariantRequest {
     name: string;
     productId?: number;
     quantity: number;
+    stock: number;
     sku: string;
     size: string;
     color: string;

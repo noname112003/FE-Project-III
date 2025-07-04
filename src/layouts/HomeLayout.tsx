@@ -16,6 +16,7 @@ export default function HomeLayout({}: Props) {
     useEffect(() => {
         const fetchStores = async () => {
             const storesData = await getStores(Number(user.id));
+            localStorage.setItem("stores", JSON.stringify(storesData));
             dispatch(setStores(storesData));
             dispatch(setStore(storesData[0]));
         };
@@ -24,7 +25,7 @@ export default function HomeLayout({}: Props) {
     }, []);
 
   return (
-    <Box sx={{display: 'flex'}}>
+    <Box sx={{display: 'flex', backgroundColor: "#F0F1F1", height: "100vh"}}>
       <HomeDrawer />
       <Box sx={{ flexGrow: 1 }}>
         <Outlet />

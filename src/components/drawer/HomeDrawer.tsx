@@ -29,6 +29,7 @@ type Props = {}
 export default function HomeDrawer({ }: Props) {
   const [openOrder, setOpenOrder] = useState(false);
   const [openProduct, setOpenProduct] = useState(false);
+  const [openWarehouse, setOpenWarehouse] = useState(false);
 
   const [openDropdown, setOpenDropdown] = useState(false);
 
@@ -208,8 +209,29 @@ export default function HomeDrawer({ }: Props) {
             </ListItemButton>
           </List>
         </Collapse>
+          <ListItemButton onClick={() => setOpenWarehouse(!openWarehouse)}>
+            <ListItemIcon sx={{ color: "#fff" }}>
+              <InventoryIcon />
+            </ListItemIcon>
+            <ListItemText sx={{ color: "#fff" }} primary="Kho tổng" />
+            {openWarehouse ? <ExpandLess style={{ color: '#fff' }}/> : <ExpandMore style={{ color: '#fff' }}/>}
+          </ListItemButton>
+          <Collapse in={openWarehouse} timeout="auto" unmountOnExit>
+            <List disablePadding>
+              <ListItemButton sx={{ pl: 4, color: '#fff' }} onClick={() => navigate('/warehouse/create')}>
+                <ListItemText primary="Tạo sản phẩm" />
+              </ListItemButton>
+            </List>
+            <List disablePadding>
+              <ListItemButton sx={{ pl: 4, color: '#fff' }}>
+                <ListItemText primary="Quản lý kho" onClick={() => navigate('/warehouse/products')}/>
+              </ListItemButton>
+            </List>
+          </Collapse>
+
         <DrawerItem name="Khách hàng" icon={<PersonIcon style={{ color: '#fff' }} />} link="/customers"/>
         <DrawerItem name="Nhân viên" icon={<ManageAccountsIcon style={{ color: '#fff' }} />} link="/admin/user"/>
+
       </List>
         <Divider />
         <List>

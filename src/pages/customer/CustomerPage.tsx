@@ -11,7 +11,7 @@ import {
 } from "@mui/material"
 import MainBox from "../../components/layout/MainBox"
 import SearchIcon from '@mui/icons-material/Search';
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Customer from "../../models/Customer.ts";
 import { fetchCustomers, submitNewCustomer } from "../../services/customerAPI.ts";
 
@@ -34,7 +34,7 @@ type newCustomer = {
 export default function CustomerPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [keyword, setKeyword] = useState<string>("");
+  // const [keyword, setKeyword] = useState<string>("");
   const [pageNum, setPageNum] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(5); // Số khách hàng mỗi trang
 
@@ -60,7 +60,7 @@ export default function CustomerPage() {
   const loadCustomers = async () => {
     setIsLoading(true); // Bắt đầu tải dữ liệu
     try {
-      const fetchedCustomers = await fetchCustomers(pageNum, pageSize, keyword);
+      const fetchedCustomers = await fetchCustomers(pageNum, pageSize, searchTerm);
       const sortedCustomers = fetchedCustomers.content.sort(
         (a: Customer, b: Customer) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
       );
@@ -83,7 +83,7 @@ export default function CustomerPage() {
   };
   useEffect(() => {
     loadCustomers();
-  }, [pageNum, pageSize, keyword]);
+  }, [pageNum, pageSize, searchTerm]);
   const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPageNum(newPage);
   };
@@ -93,12 +93,12 @@ export default function CustomerPage() {
   };
 
   // Hàm xử lý khi người dùng nhấn phím
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter') {
-      setKeyword(searchTerm); // Cập nhật từ khóa và gọi API tìm kiếm
-      setPageNum(0); // Reset lại trang đầu tiên
-    }
-  };
+  // const handleKeyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  //   if (event.key === 'Enter') {
+  //     setKeyword(searchTerm); // Cập nhật từ khóa và gọi API tìm kiếm
+  //     setPageNum(0); // Reset lại trang đầu tiên
+  //   }
+  // };
 
 
 
@@ -218,8 +218,12 @@ export default function CustomerPage() {
             <TextField
               variant="outlined"
               placeholder="Tìm kiếm khách hàng theo tên hoặc SĐT"
-              onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setSearchTerm(e.target.value)}  // Cập nhật giá trị tìm kiếm
-              onKeyPress={handleKeyPress}  // Gắn sự kiện khi nhấn phím
+              // onChange={(e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setSearchTerm(e.target.value)}  // Cập nhật giá trị tìm kiếm
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setPageNum(0); // reset về trang đầu khi tìm kiếm mới
+              }}
+              // onKeyPress={handleKeyPress}  // Gắn sự kiện khi nhấn phím
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

@@ -40,7 +40,22 @@ import CustomerDetail from "../../models/CustomerDetail.ts";
 import NewCustomer from "../../models/NewCustomer.ts";
 
 
+interface OrderDtoV2 {
+  id: number;
+  code: string;
+  customerName: string;
+  createdOn: string; // hoặc Date nếu bạn parse
+  totalQuantity: number;
+  totalPayment: number;
+}
 
+// Thông tin phân trang
+interface OrderPageInfo {
+  totalElements: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+}
 export default function CustomerDetailPage() {
   const navigate = useNavigate();
   const { customerId } = useParams<{ customerId: string }>();
@@ -59,8 +74,37 @@ export default function CustomerDetailPage() {
   const [phoneError, setPhoneError] = useState<boolean>(false); // Trạng thái để lưu lỗi số điện thoại
 
 
+  const [orders, setOrders] = useState<OrderDtoV2[]>([]);
+  const [orderPageInfo, setOrderPageInfo] = useState<OrderPageInfo>({
+    totalElements: 0,
+    pageNumber: 0,
+    pageSize: 5,
+    totalPages: 0
+  });
+  const fetchCustomerOrders = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/v1/customers/${customerId}/orders?page=${pageNum}&size=${pageSize}`);
 
+      if (!response.ok) {
+        throw new Error(`Lỗi ${response.status}`);
+      }
 
+      const data = await response.json();
+
+      setOrders(data.content); // danh sách đơn hàng
+      setOrderPageInfo({
+        totalElements: data.totalElements,
+        pageNumber: data.number, // số trang hiện tại (bắt đầu từ 0)
+        pageSize: data.size,
+        totalPages: data.totalPages
+      });
+      setPageNum(data.number);
+      setPageSize(data.size);
+
+    } catch (error: any) {
+      toast.error("Không thể lấy danh sách đơn hàng: " + error.message);
+    }
+  };
 
   const fetchCustomerById = async () => {
     try{
@@ -84,6 +128,12 @@ export default function CustomerDetailPage() {
 
     }
   }, [customerId,customer1]);
+
+  useEffect(() => {
+    if (customerId) {
+      fetchCustomerOrders();
+    }
+  }, [customerId, pageNum, pageSize]);
 
 
   // const handleBackToCustomers = () => {
@@ -163,6 +213,7 @@ export default function CustomerDetailPage() {
       // Thực hiện cập nhật giao diện hoặc thông báo thành công
     } catch (error) {
       setOpenDeleteModal(false);
+      toast.error("Không thể xoá khách hàng này!")
       console.error('Lỗi khi xóa khách hàng:', error);
       // Xử lý lỗi nếu xảy ra
     }
@@ -416,8 +467,8 @@ export default function CustomerDetailPage() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {Array.isArray(customer?.orders) && customer?.orders.length > 0 ? (
-                          customer?.orders.map((order) => (
+                      {Array.isArray(orders) && orders.length > 0 ? (
+                          orders.map((order) => (
                               <TableRow
                                   key={order.code}
                                   sx={{
@@ -446,7 +497,7 @@ export default function CustomerDetailPage() {
 
                   <TablePagination
                       component="div"
-                      count={customer?.orders.length || 0} // Tổng số lượng đơn hàng
+                      count={orderPageInfo.totalElements || 0} // Tổng số lượng đơn hàng
                       page={pageNum}
                       onPageChange={handleChangePage}
                       rowsPerPage={pageSize}

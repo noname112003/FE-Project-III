@@ -20,6 +20,8 @@ import { useNavigate } from "react-router-dom";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import "react-toastify/dist/ReactToastify.css";
 import {toast} from "react-toastify";
+import MainBox from "../../components/layout/MainBox.tsx";
+import MainAppBar from "../../components/layout/MainAppBar.tsx";
 
 interface Role {
   id: number;
@@ -171,36 +173,41 @@ export default function DetailUser() {
 
   return (
     <Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          marginTop: 1.5,
-          marginBottom: 2,
-          backgroundColor: "#ffffff",
-        }}
-      >
-        <Box display="flex" alignItems="center">
-          <Button
-            variant="text"
-            sx={{ color: "#637381", marginLeft: 2 }}
-            onClick={() => navigate("/admin/user")}
-          >
-            <KeyboardArrowLeft /> Quay lại danh sách nhân viên
-          </Button>
-        </Box>
-        <Box sx={{ flexGrow: 1 }} />
-        {user && <Button
-          sx={{ marginRight: 5 }}
-          variant="contained"
-          color="primary"
-          onClick={() =>
-            navigate(`/admin/user/update/${user.id}`, { state: user })
-          }
+      <MainAppBar>
+        <Box
+            sx={{
+              display: "flex",
+              flexGrow: 1,
+              justifyContent: "space-between",
+            }}
         >
-          Sửa thông tin
-        </Button>}
-      </Box>
+          <Button
+              variant="text"
+              sx={{
+                textTransform: "none",
+                color: "rgba(0,0,0,0.38)",
+                fontSize: "1rem",
+              }}
+              onClick={() => navigate("/admin/user")}
+          >
+            <KeyboardArrowLeft />
+            Quay lại danh sách nhân viên
+          </Button>
+
+          {user && (
+              <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() =>
+                      navigate(`/admin/user/update/${user.id}`, { state: user })
+                  }
+              >
+                Sửa thông tin
+              </Button>
+          )}
+        </Box>
+      </MainAppBar>
+
       {loading ? (
         <Box
           sx={{
@@ -213,134 +220,135 @@ export default function DetailUser() {
           <CircularProgress />
         </Box>
       ) : user ? (
-
-      <Box sx={{ padding: 3, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
-        <Card
-          sx={{ maxWidth: 800, margin: "0 auto", padding: 3, boxShadow: 3 }}
-        >
-          <CardContent>
-            <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
-              Thông tin nhân viên
-            </Typography>
-            <Divider sx={{ marginY: 2 }} />
-            <Grid container spacing={3}>
-              <Grid item xs={6}>
-                <Typography>
-                  <Typography sx={{ fontWeight: "bold" }}>
-                    Tên nhân viên :{" "}
-                  </Typography>
-                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    {user.name}
-                  </Typography>
-                </Typography>
-                <Typography>
-                  <Typography sx={{ fontWeight: "bold" }}>Email :</Typography>
-                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    {user.email}
-                  </Typography>
-                </Typography>
-
-                <Typography>
-                  <Typography sx={{ fontWeight: "bold" }}>
-                    Cập nhật lần cuối :
-                  </Typography>
-                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    {" "}
-                    {formatDate(user.updateOn)}
-                  </Typography>
-                </Typography>
-
-                <Typography>
-                  <Typography sx={{ fontWeight: "bold" }}>
-                    Trạng thái tài khoản :{" "}
-                  </Typography>
-                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    <Chip
-                      label={user.status ? "Hoạt động" : "Khoá"}
-                      color={user.status ? "success" : "error"}
-                      size="small"
-                      sx={{ marginLeft: 1 }}
-                    />
-                  </Typography>
-                </Typography>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography>
-                  <Typography sx={{ fontWeight: "bold" }}>Vai trò :</Typography>
-                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    {user.roles
-                      .map((role) => roleMap[role.name] || role.name)
-                      .join(", ")}
-                  </Typography>
-                </Typography>
-                <Typography>
-                  <Typography sx={{ fontWeight: "bold" }}>
-                    {" "}
-                    Số điện thoại:{" "}
-                  </Typography>
-                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    {user.phoneNumber}
-                  </Typography>
-                </Typography>
-                <Typography>
-                  <Typography sx={{ fontWeight: "bold" }}>Địa chỉ :</Typography>
-                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    {user.address}
-                  </Typography>
-                </Typography>
-                <Typography>
-                  <Typography sx={{ fontWeight: "bold" }}>
-                    Ngày sinh :
-                  </Typography>
-                  <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                    {formatDate(user.birthDay)}
-                  </Typography>
-                </Typography>
-              </Grid>
-            </Grid>
-
-            <Divider sx={{ marginY: 2 }} />
-
-            <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-              <Button
-                variant="outlined"
-                color="primary"
-                sx={{ width: "200px" }}
-                onClick={() => setOpenDialog(true)}
+          <MainBox>
+            <Box sx={{ padding: 3, backgroundColor: "#F0F1F1", minHeight: "100vh" }}>
+              <Card
+                  sx={{ maxWidth: 800, margin: "0 auto", padding: 3, boxShadow: 3 }}
               >
-                Khôi phục mật khẩu
-              </Button>
-              <Button
-                variant="outlined"
-                color={user.status ? "error" : "success"}
-                sx={{ width: "200px" }}
-                onClick={handleToggleStatus}
-              >
-                {user.status ? "Khoá tài khoản" : "Mở khóa tài khoản"}
-              </Button>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+                    Thông tin nhân viên
+                  </Typography>
+                  <Divider sx={{ marginY: 2 }} />
+                  <Grid container spacing={3}>
+                    <Grid item xs={6}>
+                      <Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Tên nhân viên :{" "}
+                        </Typography>
+                        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                          {user.name}
+                        </Typography>
+                      </Typography>
+                      <Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>Email :</Typography>
+                        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                          {user.email}
+                        </Typography>
+                      </Typography>
+
+                      <Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Cập nhật lần cuối :
+                        </Typography>
+                        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                          {" "}
+                          {formatDate(user.updateOn)}
+                        </Typography>
+                      </Typography>
+
+                      <Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Trạng thái tài khoản :{" "}
+                        </Typography>
+                        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                          <Chip
+                              label={user.status ? "Hoạt động" : "Khoá"}
+                              color={user.status ? "success" : "error"}
+                              size="small"
+                              sx={{ marginLeft: 1 }}
+                          />
+                        </Typography>
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                      <Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>Vai trò :</Typography>
+                        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                          {user.roles
+                              .map((role) => roleMap[role.name] || role.name)
+                              .join(", ")}
+                        </Typography>
+                      </Typography>
+                      <Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          {" "}
+                          Số điện thoại:{" "}
+                        </Typography>
+                        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                          {user.phoneNumber}
+                        </Typography>
+                      </Typography>
+                      <Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>Địa chỉ :</Typography>
+                        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                          {user.address}
+                        </Typography>
+                      </Typography>
+                      <Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          Ngày sinh :
+                        </Typography>
+                        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+                          {formatDate(user.birthDay)}
+                        </Typography>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
+                  <Divider sx={{ marginY: 2 }} />
+
+                  <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        sx={{ width: "200px" }}
+                        onClick={() => setOpenDialog(true)}
+                    >
+                      Khôi phục mật khẩu
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color={user.status ? "error" : "success"}
+                        sx={{ width: "200px" }}
+                        onClick={handleToggleStatus}
+                    >
+                      {user.status ? "Khoá tài khoản" : "Mở khóa tài khoản"}
+                    </Button>
+                  </Box>
+                </CardContent>
+              </Card>
+
+              <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                <DialogTitle>Xác nhận khôi phục mật khẩu</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Bạn có chắc chắn muốn khôi phục mật khẩu cho nhân viên {user.name}{" "}
+                    không?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setOpenDialog(false)} color="primary">
+                    Hủy
+                  </Button>
+                  <Button onClick={handleResetPassword} color="primary">
+                    Khôi phục mật khẩu
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Box>
-          </CardContent>
-        </Card>
-
-        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-          <DialogTitle>Xác nhận khôi phục mật khẩu</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Bạn có chắc chắn muốn khôi phục mật khẩu cho nhân viên {user.name}{" "}
-              không?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpenDialog(false)} color="primary">
-              Hủy
-            </Button>
-            <Button onClick={handleResetPassword} color="primary">
-              Khôi phục mật khẩu
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+          </MainBox>
       ) : (
         <Typography>No user found</Typography>
       )}

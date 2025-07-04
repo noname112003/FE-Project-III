@@ -1,6 +1,28 @@
-import { Autocomplete, Box, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography, TableContainer, Button, Dialog, DialogTitle, DialogContent, FormControl, FormControlLabel, RadioGroup, Radio, CircularProgress } from "@mui/material"
+import {
+  Autocomplete,
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+  TableContainer,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  FormControl,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
+  CircularProgress,
+  Divider, Grid, Tooltip, FormLabel
+} from "@mui/material"
 import CreateOrderAppBar from "./CreateOrderAppBar"
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { createCustomer, getCustomersByKeyword } from "../../../services/customerAPI"
 import Customer from "../../../models/Customer"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -17,9 +39,6 @@ import {
   createPaymentLink,
   CreatePaymentLinkRequestBody
 } from "../../../services/orderAPI"
-import { LocalizationProvider } from "@mui/x-date-pickers"
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from "dayjs"
 import { useNavigate } from "react-router-dom"
 import { useReactToPrint } from "react-to-print"
@@ -105,7 +124,7 @@ function NewCustomerDialog({ open, handleClose }: DialogProps) {
       phoneNumber: phoneNumber,
       email: email,
       address: address,
-      birthday: birthday ? birthday.toISOString() : null,
+      birthday: birthday || null,
       gender: gender
     }
     createCustomer(customer).then((_res) => {
@@ -118,58 +137,170 @@ function NewCustomerDialog({ open, handleClose }: DialogProps) {
 
   return <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
     <DialogTitle>Thêm khách hàng mới</DialogTitle>
+    <Divider />
     <DialogContent>
-      <Box display="flex" justifyContent="space-between" mb={2}>
-        <Box>
-          <Typography variant="body1" sx={{ color: '#000' }}>Tên khách hàng <span style={{ color: '#FF4D4D' }}>*</span></Typography>
-          <TextField sx={{ width: '300px' }} value={name} onChange={e => setName(e.target.value)} />
-        </Box>
-        <Box>
-          <Typography variant="body1" sx={{ color: '#000' }}>Số điện thoại <span style={{ color: '#FF4D4D' }}>*</span></Typography>
-          <TextField sx={{ width: '300px' }} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
-        </Box>
-      </Box>
-      <Box display="flex" justifyContent="space-between" mb={2}>
-        <Box>
-          <Typography variant="body1" sx={{ color: '#000' }}>Ngày sinh</Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              sx={{ width: '300px' }}
+      <Grid container spacing={2}>
+        {/* Tên khách hàng */}
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            Tên khách hàng
+            <Tooltip title="Bắt buộc" placement="top" arrow>
+              <span style={{ color: 'red', marginLeft: 4 }}>*</span>
+            </Tooltip>
+          </Typography>
+          <TextField
+
+              margin="dense"
+              name="name"
+              fullWidth
+              value={name}
+              onChange={e => setName(e.target.value)}
+          />
+        </Grid>
+
+        {/* Số điện thoại */}
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            Số điện thoại
+            <Tooltip title="Bắt buộc" placement="top" arrow>
+              <span style={{ color: 'red', marginLeft: 4 }}>*</span>
+            </Tooltip>
+          </Typography>
+          <TextField
+              margin="dense"
+              name="phoneNumber"
+              fullWidth
+              value={phoneNumber}
+              // error={phoneError}
+              onChange={e => setPhoneNumber(e.target.value)}
+              // helperText={phoneError ? "Số điện thoại đã tồn tại" : ""}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: 'default', // Thay đổi màu viền thành đỏ khi có lỗi
+                  },
+                },
+              }}
+          />
+        </Grid>
+
+        {/* Ngày sinh */}
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            Ngày sinh
+          </Typography>
+          <TextField
+              margin="dense"
+              name="birthday"
+              type="date"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
               value={birthday}
-              onChange={(value) => { setBirthday(value) }}
-              format="DD/MM/YYYY"
-            />
-          </LocalizationProvider>
-        </Box>
-        <Box>
-          <Typography variant="body1" sx={{ color: '#000' }}>Email</Typography>
-          <TextField sx={{ width: '300px' }} value={email} onChange={e => setEmail(e.target.value)} />
-        </Box>
-      </Box>
-      <Box display="flex" justifyContent="space-between" mb={2}>
-        <Box sx={{ width: '100%' }}>
-          <Typography variant="body1" sx={{ color: '#000' }}>Địa chỉ</Typography>
-          <TextField sx={{ width: '100%' }} value={address} onChange={e => setAddress(e.target.value)} />
-        </Box>
-      </Box>
-      <Box display="flex" justifyContent="space-between">
-        <Box>
-          <Typography variant="body1" sx={{ color: '#000' }}>Giới tính</Typography>
-          <FormControl>
+              onChange={(e) => { setBirthday(e.target.value) }}
+          />
+        </Grid>
+
+        {/* Email */}
+        <Grid item xs={6}>
+          <Typography variant="subtitle1">
+            Email
+          </Typography>
+          <TextField
+              label="Email"
+              margin="dense"
+              name="email"
+              type="email"
+              fullWidth
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+          />
+        </Grid>
+
+        {/* Địa chỉ */}
+        <Grid item xs={12}>
+          <Typography variant="subtitle1">
+            Địa chỉ
+          </Typography>
+          <TextField
+              margin="dense"
+              name="address"
+              fullWidth
+              value={address}
+              onChange={e => setAddress(e.target.value)}
+          />
+        </Grid>
+
+        {/* Giới tính */}
+        <Grid item xs={12}>
+          <FormControl component="fieldset" margin="dense">
+            <FormLabel component="legend">Giới tính</FormLabel>
             <RadioGroup
-              row
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="female"
-              name="radio-buttons-group"
-              value={gender}
-              onChange={(event) => setGender(event.target.value === 'true')}
+                row
+                aria-label="gender"
+                name="gender"
+                value={gender ? "male" : "female"}  // Hiển thị đúng giới tính theo boolean
+                onChange={(event) => setGender(event.target.value === 'true')}
             >
-              <FormControlLabel value={false} control={<Radio />} label="Nam" />
-              <FormControlLabel value={true} control={<Radio />} label="Nữ" />
+              <FormControlLabel value="male" control={<Radio />} label="Nam" />
+              <FormControlLabel value="female" control={<Radio />} label="Nữ" />
+
             </RadioGroup>
           </FormControl>
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
+      {/*<Box display="flex" justifyContent="space-between" mb={2}>*/}
+      {/*  <Box>*/}
+      {/*    <Typography variant="body1" sx={{ color: '#000' }}>Tên khách hàng <span style={{ color: '#FF4D4D' }}>*</span></Typography>*/}
+      {/*    <TextField sx={{ width: '300px' }} value={name} onChange={e => setName(e.target.value)} />*/}
+      {/*  </Box>*/}
+      {/*  <Box>*/}
+      {/*    <Typography variant="body1" sx={{ color: '#000' }}>Số điện thoại <span style={{ color: '#FF4D4D' }}>*</span></Typography>*/}
+      {/*    <TextField sx={{ width: '300px' }} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />*/}
+      {/*  </Box>*/}
+      {/*</Box>*/}
+      {/*<Box display="flex" justifyContent="space-between" mb={2}>*/}
+      {/*  <Box>*/}
+      {/*    <Typography variant="body1" sx={{ color: '#000' }}>Ngày sinh</Typography>*/}
+      {/*    <LocalizationProvider dateAdapter={AdapterDayjs}>*/}
+      {/*      <DatePicker*/}
+      {/*        sx={{ width: '300px' }}*/}
+      {/*        value={birthday}*/}
+      {/*        onChange={(value) => { setBirthday(value) }}*/}
+      {/*        format="DD/MM/YYYY"*/}
+      {/*      />*/}
+      {/*    </LocalizationProvider>*/}
+      {/*  </Box>*/}
+      {/*  <Box>*/}
+      {/*    <Typography variant="body1" sx={{ color: '#000' }}>Email</Typography>*/}
+      {/*    <TextField sx={{ width: '300px' }} value={email} onChange={e => setEmail(e.target.value)} />*/}
+      {/*  </Box>*/}
+      {/*</Box>*/}
+      {/*<Box display="flex" justifyContent="space-between" mb={2}>*/}
+      {/*  <Box sx={{ width: '100%' }}>*/}
+      {/*    <Typography variant="body1" sx={{ color: '#000' }}>Địa chỉ</Typography>*/}
+      {/*    <TextField sx={{ width: '100%' }} value={address} onChange={e => setAddress(e.target.value)} />*/}
+      {/*  </Box>*/}
+      {/*</Box>*/}
+      {/*<Box display="flex" justifyContent="space-between">*/}
+      {/*  <Box>*/}
+      {/*    <Typography variant="body1" sx={{ color: '#000' }}>Giới tính</Typography>*/}
+      {/*    <FormControl>*/}
+      {/*      <RadioGroup*/}
+      {/*        row*/}
+      {/*        aria-labelledby="demo-radio-buttons-group-label"*/}
+      {/*        defaultValue="female"*/}
+      {/*        name="radio-buttons-group"*/}
+      {/*        value={gender}*/}
+      {/*        onChange={(event) => setGender(event.target.value === 'true')}*/}
+      {/*      >*/}
+      {/*        <FormControlLabel value={false} control={<Radio />} label="Nam" />*/}
+      {/*        <FormControlLabel value={true} control={<Radio />} label="Nữ" />*/}
+      {/*      </RadioGroup>*/}
+      {/*    </FormControl>*/}
+      {/*  </Box>*/}
+      {/*</Box>*/}
     </DialogContent>
     <Box display="flex" justifyContent="flex-end" p={2}>
       <Button variant="outlined" onClick={handleClose} sx={{ marginRight: '25px' }}>

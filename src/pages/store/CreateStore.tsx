@@ -10,7 +10,6 @@ import {
     MenuItem,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Header from "../../components/layout/Header.tsx";
 import MainBox from "../../components/layout/MainBox.tsx";
 
@@ -35,20 +34,22 @@ const CreateStore: React.FC = () => {
 
     const navigate = useNavigate();
 
-    // Lấy danh sách tỉnh/thành
+    // Tải tỉnh/thành
     useEffect(() => {
-        axios.get("https://provinces.open-api.vn/api/?depth=1")
-            .then((res) => setProvinces(res.data))
+        fetch("https://provinces.open-api.vn/api/?depth=1")
+            .then(res => res.json())
+            .then(data => setProvinces(data))
             .catch(() => setError("Không thể tải danh sách tỉnh/thành."));
     }, []);
 
-    // Lấy danh sách quận/huyện khi chọn tỉnh
+    // Tải quận/huyện theo tỉnh
     useEffect(() => {
         if (form.city) {
             const selectedProvince = provinces.find(p => p.name === form.city);
             if (selectedProvince) {
-                axios.get(`https://provinces.open-api.vn/api/p/${selectedProvince.code}?depth=2`)
-                    .then(res => setDistricts(res.data.districts))
+                fetch(`https://provinces.open-api.vn/api/p/${selectedProvince.code}?depth=2`)
+                    .then(res => res.json())
+                    .then(data => setDistricts(data.districts || []))
                     .catch(() => setError("Không thể tải danh sách quận/huyện."));
             }
         } else {
@@ -57,13 +58,14 @@ const CreateStore: React.FC = () => {
         }
     }, [form.city]);
 
-    // Lấy danh sách phường/xã khi chọn quận
+    // Tải phường/xã theo quận
     useEffect(() => {
         if (form.district) {
             const selectedDistrict = districts.find(d => d.name === form.district);
             if (selectedDistrict) {
-                axios.get(`https://provinces.open-api.vn/api/d/${selectedDistrict.code}?depth=2`)
-                    .then(res => setWards(res.data.wards))
+                fetch(`https://provinces.open-api.vn/api/d/${selectedDistrict.code}?depth=2`)
+                    .then(res => res.json())
+                    .then(data => setWards(data.wards || []))
                     .catch(() => setError("Không thể tải danh sách phường/xã."));
             }
         } else {

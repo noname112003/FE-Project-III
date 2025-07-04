@@ -27,6 +27,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import MainBox from "../../components/layout/MainBox.tsx";
 import Header from "../../components/layout/Header.tsx";
 import {useSelector} from "react-redux";
+import {Add} from "@mui/icons-material";
 // interface Role {
 //   id: number;
 //   name: string;
@@ -266,6 +267,7 @@ export default function User({}: Props) {
               <Button
                   variant="contained"
                   color="primary"
+                  startIcon={<Add />}
                   onClick={() => navigate(`/admin/user/create`)}
                   sx={{
                     ml: 2, // Space between Select and Button

@@ -25,7 +25,7 @@ import Header from "../../components/layout/Header.tsx";
 import {useSelector} from "react-redux";
 type Props = {};
 
-export default function ProductPage({}: Props) {
+export default function ProductPageV2({}: Props) {
     const [data, setData] = useState<ProductResponse[]>([]);
     const [numberOfProducts, setNumberOfProducts] = useState<number>(0);
     const [query, setQuery] = useState<string>("");
@@ -112,7 +112,7 @@ export default function ProductPage({}: Props) {
                                             Nhãn hiệu
                                         </TableCell>
                                         <TableCell style={{ width: "10px" }}>
-                                            Tồn kho
+                                            Tồn kho tổng
                                         </TableCell>
                                         <TableCell style={{ width: "15%" }}>
                                             Ngày khởi tạo
@@ -140,7 +140,7 @@ export default function ProductPage({}: Props) {
                                                 style={{ cursor: "pointer" }}
                                                 onClick={() =>
                                                     navigate(
-                                                        `/products/${row.id}`
+                                                        `/warehouse/products/${row.id}`
                                                     )
                                                 }
                                             >
@@ -189,12 +189,13 @@ export default function ProductPage({}: Props) {
                                                     {row.brandName}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {row.variants?.reduce((total, variant) => {
-                                                        return (
-                                                            total +
-                                                            (variant.variantStores?.reduce((sum, store) => sum + (store.quantity || 0), 0) || 0)
-                                                        );
-                                                    }, 0) ?? 0}
+                                                    {/*{row.variants?.reduce((total, variant) => {*/}
+                                                    {/*    return (*/}
+                                                    {/*        total +*/}
+                                                    {/*        (variant.variantStores?.reduce((sum, store) => sum + (store.quantity || 0), 0) || 0)*/}
+                                                    {/*    );*/}
+                                                    {/*}, 0) ?? 0}*/}
+                                                    {row.stock}
                                                 </TableCell>
                                                 <TableCell>
                                                     {row.createdOn ? formatDate(row.createdOn.toString()) : "N/A"}

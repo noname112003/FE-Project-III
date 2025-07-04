@@ -91,14 +91,35 @@ export default function AddProduct({}: Props) {
         }
     }
 
+    // function handleVariantChange(index: number, field: string, value: string) {
+    //     const updatedVariants = [...variants];
+    //     updatedVariants[index] = {
+    //         ...updatedVariants[index],
+    //         [field]: field === "quantity" ? parseInt(value, 10) || 0 : value,
+    //     };
+    //     setVariants(updatedVariants);
+    // }
+
     function handleVariantChange(index: number, field: string, value: string) {
         const updatedVariants = [...variants];
-        updatedVariants[index] = {
-            ...updatedVariants[index],
-            [field]: field === "quantity" ? parseInt(value, 10) || 0 : value,
-        };
+
+        if (field === "quantity") {
+            const parsedValue = parseInt(value, 10) || 0;
+            updatedVariants[index] = {
+                ...updatedVariants[index],
+                quantity: parsedValue,
+                stock: parsedValue, // Cập nhật stock bằng quantity
+            };
+        } else {
+            updatedVariants[index] = {
+                ...updatedVariants[index],
+                [field]: value,
+            };
+        }
+
         setVariants(updatedVariants);
     }
+
     // function handleTotalQuantity(e: any){
     //     if (e.target.value != -1) {
     //         const { name, value } = e.target;
@@ -119,6 +140,7 @@ export default function AddProduct({}: Props) {
                     name: newProduct.name,
                     sku: "",
                     quantity: 0,
+                    stock: 0,
                     size: "",
                     color: "",
                     material: "",
@@ -152,6 +174,7 @@ export default function AddProduct({}: Props) {
             createProduct({
                 ...newProduct,
                 totalQuantity: totalQuantity,
+                stock: totalQuantity,
                 variants: updatedVariants,
                 imagePath: images,
             })
@@ -258,6 +281,7 @@ export default function AddProduct({}: Props) {
                                         .join(" - ") || " ",
                             sku: "",
                             quantity: 0,
+                            stock: 0,
                             size: sizes[i] || "",
                             color: colors[j] || "",
                             material: materials[k] || "",
@@ -282,19 +306,19 @@ export default function AddProduct({}: Props) {
             <AddProductAppBar submit={handleAddNewProduct} />
             <MainBox>
                 <Box sx={{ padding: "20px 24px", backgroundColor: "#F0F1F1" }}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            height: "60px",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Typography sx={{ fontSize: "20px" }}>
-                            Thêm sản phẩm
-                            <span style={{ color: "#FF4D4D" }}>*</span>
-                        </Typography>
-                    </Box>
+                    {/*<Box*/}
+                    {/*    sx={{*/}
+                    {/*        display: "flex",*/}
+                    {/*        height: "60px",*/}
+                    {/*        justifyContent: "space-between",*/}
+                    {/*        alignItems: "center",*/}
+                    {/*    }}*/}
+                    {/*>*/}
+                    {/*    <Typography sx={{ fontSize: "20px" }}>*/}
+                    {/*        Thêm sản phẩm*/}
+                    {/*        <span style={{ color: "#FF4D4D" }}>*</span>*/}
+                    {/*    </Typography>*/}
+                    {/*</Box>*/}
                     <Box sx={{ display: "flex", gap: "24px" }}>
                         <Box sx={{ width: "70%" }}>
                             <Box

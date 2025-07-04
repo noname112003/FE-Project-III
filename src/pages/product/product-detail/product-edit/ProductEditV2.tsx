@@ -8,7 +8,6 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import ProductEditAppBar from "./ProductEditAppBar";
 import MainBox from "../../../../components/layout/MainBox";
 import { AddCircle, Add, Cancel, Image } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -30,10 +29,11 @@ import { getAllCategories } from "../../../../services/categoryAPI";
 import { getProductById, updateProduct } from "../../../../services/productAPI";
 import { getAllBrands } from "../../../../services/brandAPI";
 import {useSelector} from "react-redux";
+import ProductEditAppBarV2 from "./ProductEditAppBarV2.tsx";
 
 
 
-export default function ProductDetail() {
+export default function ProductEditV2() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState<ProductRequest>(
@@ -63,58 +63,18 @@ export default function ProductDetail() {
     function handleVariantChange(index: number, field: string, value: string) {
         const updatedVariants = [...variants];
 
-        if (field === "variantStore") {
-            // Giả sử mỗi variant có ít nhất một variantStore
-            // const updatedVariantStore = updatedVariants[index].variantStores || [];
-            // if (updatedVariantStore.length > 0) {
-            //     updatedVariantStore[0] = {
-            //         ...updatedVariantStore[0],
-            //         quantity: parseInt(value, 10) || 0,
-            //     };
-            // } else {
-            //     // Nếu chưa có variantStore, bạn có thể thêm mới nếu cần
-            //     updatedVariantStore.push({
-            //         storeId: store.id, // hoặc storeId tương ứng
-            //         quantity: parseInt(value, 10) || 0,
-            //     });
-            // }
-            //
-            // updatedVariants[index] = {
-            //     ...updatedVariants[index],
-            //     variantStores: updatedVariantStore,
-            // };
+        if (field === "stock") {
 
             const updatedVariant = { ...updatedVariants[index] };
-            const updatedVariantStores = [...(updatedVariant.variantStores || [])];
 
-            const newQuantity = parseInt(value, 10) || 0;
+            const newStock = parseInt(value, 10) || 0;
+            const oldStock = updatedVariant?.stock || 0;
+            const stockChange = newStock - oldStock;
+            updatedVariant.stock = newStock;
+            updatedVariant.quantity = updatedVariant.quantity + stockChange;
+            product.stock = product.stock + stockChange;
+            product.totalQuantity = product.totalQuantity + stockChange;
 
-            if (updatedVariantStores.length > 0) {
-                const oldQuantity = updatedVariantStores[0].quantity || 0;
-
-                // Cập nhật variantStore quantity
-                updatedVariantStores[0] = {
-                    ...updatedVariantStores[0],
-                    quantity: newQuantity,
-                };
-
-                // Cập nhật lại stock: stock = stock cũ + (old - new)
-                const stockChange = oldQuantity - newQuantity;
-                updatedVariant.stock = updatedVariant.stock + stockChange;
-                product.stock = product.stock + stockChange;
-            } else {
-                // Nếu chưa có variantStore, thêm mới và cập nhật stock tương ứng
-                updatedVariantStores.push({
-                    storeId: store.id,
-                    quantity: newQuantity,
-                });
-
-                // Khi thêm mới store lần đầu, giả định stock giảm đúng bằng newQuantity
-                updatedVariant.stock = updatedVariant.stock - newQuantity;
-                product.stock = product.stock - newQuantity;
-            }
-
-            updatedVariant.variantStores = updatedVariantStores;
             updatedVariants[index] = updatedVariant;
         } else {
             updatedVariants[index] = {
@@ -196,7 +156,7 @@ export default function ProductDetail() {
         }, store.id)
             .then((_res) => {
                 toast.success("Cập nhật sản phẩm thành công");
-                navigate(`/products/${_res.id}`);
+                navigate(`/warehouse/products/${_res.id}`);
             })
             .catch((error) => {
                 toast.error(error.response.data.message);
@@ -300,7 +260,7 @@ export default function ProductDetail() {
     if (loading) {
         return (
             <Box>
-                <ProductEditAppBar />
+                <ProductEditAppBarV2 />
                 <MainBox>
                     <Box
                         sx={{
@@ -317,7 +277,7 @@ export default function ProductDetail() {
     }
     return (
         <Box>
-            <ProductEditAppBar id={id} submit={handleUpdateProduct} />
+            <ProductEditAppBarV2 id={id} submit={handleUpdateProduct} />
             <MainBox>
                 <Box sx={{ padding: "20px 24px", backgroundColor: "#F0F1F1" }}>
                     <Box
@@ -946,12 +906,12 @@ export default function ProductDetail() {
                                                             }}
                                                         >
                                                             {[
-                                                                variant.size,
-                                                                variant.color,
-                                                                variant.material,
-                                                            ]
-                                                                .filter(Boolean)
-                                                                .join(" - ") ||
+                                                                    variant.size,
+                                                                    variant.color,
+                                                                    variant.material,
+                                                                ]
+                                                                    .filter(Boolean)
+                                                                    .join(" - ") ||
                                                                 ""}
                                                         </Typography>
                                                         <Typography
@@ -965,7 +925,8 @@ export default function ProductDetail() {
                                                             }}
                                                         >
                                                             Tồn kho:{" "}
-                                                            {variant.variantStores && variant?.variantStores[0]?.quantity || 0}
+                                                            {/*{variant.variantStores && variant?.variantStores[0]?.quantity || 0}*/}
+                                                            {variant?.stock || 0}
                                                         </Typography>
                                                     </Box>
                                                 </Box>
@@ -1119,11 +1080,12 @@ export default function ProductDetail() {
                                                                 size="small"
                                                                 id="quantity"
                                                                 name="quantity"
-                                                                value={variant.variantStores && variant?.variantStores[0]?.quantity || 0}
+                                                                // value={variant.variantStores && variant?.variantStores[0]?.quantity || 0}
+                                                                value={variant?.stock || 0}
                                                                 onChange={(e) =>
                                                                     handleVariantChange(
                                                                         index,
-                                                                        "variantStore",
+                                                                        "stock",
                                                                         e.target
                                                                             .value
                                                                     )
@@ -1251,7 +1213,7 @@ export default function ProductDetail() {
                                                 >
                                                     {sizes.length > 0 ||
                                                     additionalSizes.length >
-                                                        0 ? (
+                                                    0 ? (
                                                         <Box
                                                             sx={{
                                                                 width: "48.5%",
@@ -1282,9 +1244,9 @@ export default function ProductDetail() {
                                                                     undefined
                                                                         ? variant?.size
                                                                         : additionalSizes.length >
-                                                                            0
-                                                                          ? additionalSizes[0]
-                                                                          : ""
+                                                                        0
+                                                                            ? additionalSizes[0]
+                                                                            : ""
                                                                 }
                                                                 onChange={(e) =>
                                                                     handleVariantChange(
@@ -1324,7 +1286,7 @@ export default function ProductDetail() {
                                                     )}
                                                     {colors.length > 0 ||
                                                     additionalColors.length >
-                                                        0 ? (
+                                                    0 ? (
                                                         <Box
                                                             sx={{
                                                                 width: "48.5%",
@@ -1355,9 +1317,9 @@ export default function ProductDetail() {
                                                                     undefined
                                                                         ? variant?.color
                                                                         : additionalColors.length >
-                                                                            0
-                                                                          ? additionalColors[0]
-                                                                          : ""
+                                                                        0
+                                                                            ? additionalColors[0]
+                                                                            : ""
                                                                 }
                                                                 onChange={(e) =>
                                                                     handleVariantChange(
@@ -1397,7 +1359,7 @@ export default function ProductDetail() {
                                                     )}
                                                     {materials.length > 0 ||
                                                     additionalMaterials.length >
-                                                        0 ? (
+                                                    0 ? (
                                                         <Box
                                                             sx={{
                                                                 width: "48.5%",
@@ -1429,18 +1391,18 @@ export default function ProductDetail() {
                                                                     undefined
                                                                         ? variant?.material
                                                                         : additionalMaterials.length >
-                                                                            0
-                                                                          ? additionalMaterials[0]
-                                                                          : ""
+                                                                        0
+                                                                            ? additionalMaterials[0]
+                                                                            : ""
                                                                 }
                                                                 defaultValue={
                                                                     variant?.material !==
                                                                     undefined
                                                                         ? variant?.material
                                                                         : additionalMaterials.length >
-                                                                            0
-                                                                          ? additionalMaterials[0]
-                                                                          : ""
+                                                                        0
+                                                                            ? additionalMaterials[0]
+                                                                            : ""
                                                                 }
                                                                 onChange={(e) =>
                                                                     handleVariantChange(

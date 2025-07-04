@@ -22,6 +22,9 @@ export default function OverviewPage() {
   const navigate = useNavigate();
   const store = useSelector((state: any) => state.storeSetting.store);
   const fetchTodayOrders = async () => {
+    setOrders([]);
+    setTotalOrders(0);
+    setTotalRevenue(0);
     try {
       const data = await getTodayOrders(store.id, pageNum, pageSize); // Gọi API
       setOrders(data.orders.content);

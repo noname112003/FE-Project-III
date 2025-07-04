@@ -33,6 +33,9 @@ import UpdateOrderPage from "../pages/order/create-order/UpdateOrderPage.tsx";
 import NewUserProfile from "../pages/admin/NewUserProfile.tsx";
 import StoreList from "../pages/store/ListStorePage.tsx";
 import CreateStore from "../pages/store/CreateStore.tsx";
+import ProductPageV2 from "../pages/product/ProductPageV2.tsx";
+import ProductDetailV2 from "../pages/product/product-detail/ProductDetailV2.tsx";
+import ProductEditV2 from "../pages/product/product-detail/product-edit/ProductEditV2.tsx";
 
 export const router = createBrowserRouter([
   // {
@@ -130,6 +133,28 @@ export const router = createBrowserRouter([
               {
                 path: ":id/variants/create",
                 element: <AddVariant />,
+              }
+            ]
+          },
+          {
+            path: "warehouse",
+            element: <AdminRoute/>,
+            children: [
+              {
+                path: "create",
+                element: <AddProduct />,
+              },
+              {
+                path: "products",
+                element: <ProductPageV2 />,
+              },
+              {
+                path: "products/:id",
+                element: <ProductDetailV2 />,
+              },
+              {
+                path: "products/:id/edit",
+                element: <ProductEditV2 />,
               }
             ]
           },

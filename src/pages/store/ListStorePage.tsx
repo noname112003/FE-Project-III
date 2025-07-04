@@ -8,13 +8,13 @@ import {
     TableCell,
     TableBody,
     Chip,
-    Paper,
     CircularProgress, Button,
 } from '@mui/material';
 import Header from "../../components/layout/Header.tsx";
 import MainBox from "../../components/layout/MainBox.tsx";
 
 import {useNavigate} from "react-router-dom";
+import {Add} from "@mui/icons-material";
 // export const IconBtnAddV2 = () => (
 //     <svg
 //         width="16"
@@ -82,17 +82,18 @@ const StoreList: React.FC = () => {
         <Box>
             <Header/>
             <MainBox>
-                <Paper elevation={3} sx={{ padding: "30px", margin: "30px" }}>
+                <Box  sx={{ margin: "24px", backgroundColor: '#f9f9f9', borderRadius: '8px' }}>
                     {/*<Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>*/}
                     {/*    Thông tin các chi nhánh*/}
                     {/*</Typography>*/}
-                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Box sx={{padding: "16px"}} display="flex" justifyContent="space-between" alignItems="center">
                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
                             Thông tin các chi nhánh
                         </Typography>
                         <Button
                             variant="contained"
                             color="primary"
+                            startIcon={<Add />}
                             onClick={() => navigate("/stores/create")}
                             sx={{ textTransform: "none" }}
                         >
@@ -109,15 +110,20 @@ const StoreList: React.FC = () => {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell><strong>Tên chi nhánh</strong></TableCell>
-                                    <TableCell><strong>Địa chỉ</strong></TableCell>
-                                    <TableCell><strong>Số điện thoại cừa hàng</strong></TableCell>
-                                    <TableCell align="center"><strong>Trạng thái</strong></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}><strong>Tên chi nhánh</strong></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}><strong>Địa chỉ</strong></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }}><strong>Số điện thoại cừa hàng</strong></TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', color: '#333' }} align="center"><strong>Trạng thái</strong></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {stores.map((store) => (
-                                    <TableRow key={store.id}>
+                                    <TableRow
+                                        key={store.id}
+                                        sx={{// Hover effect
+                                        cursor: 'pointer'
+                                        }}
+                                    hover>
                                         <TableCell>{store.name}</TableCell>
                                         <TableCell>
                                             {[store.address, store.ward, store.district, store.city]
@@ -131,7 +137,7 @@ const StoreList: React.FC = () => {
                             </TableBody>
                         </Table>
                     )}
-                </Paper>
+                </Box>
             </MainBox>
         </Box>
 
