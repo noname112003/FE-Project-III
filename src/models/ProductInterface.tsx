@@ -130,6 +130,7 @@ export const initialVariantRequest = {
     name: "",
     productId: 0,
     quantity: 0,
+    stock: 0,
     sku: "",
     size: "",
     color: "",

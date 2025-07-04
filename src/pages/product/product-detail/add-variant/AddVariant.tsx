@@ -52,6 +52,7 @@ export default function AddVariant({}: Props) {
                     initialPrice: 0,
                     priceForSale: 0,
                     quantity: 0,
+                    stock: 0,
                     status: true,
                 });
             })

@@ -198,7 +198,9 @@ function NewCustomerDialog({ open, handleClose }: DialogProps) {
                 shrink: true,
               }}
               value={birthday}
-              onChange={(e) => { setBirthday(e.target.value) }}
+              onChange={(e) => {
+                setBirthday(e.target.value ? dayjs(e.target.value) : null);
+              }}
           />
         </Grid>
 
