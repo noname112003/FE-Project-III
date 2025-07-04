@@ -49,7 +49,7 @@ import {VariantResponse} from "../../../models/ProductInterface.tsx";
 import QRCodeDisplay from "./QRCodeDisplay.tsx";
 import MainBox from "../../../components/layout/MainBox.tsx";
 
-
+import dayjs from 'dayjs';
 type VariantTableRowProps = {
   index: number,
   orderDetailList: OrderDetail[],
