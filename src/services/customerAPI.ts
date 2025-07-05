@@ -85,10 +85,12 @@ const getCustomerDetailById = async (id: string | undefined): Promise<CustomerDe
     }
 }
 
+// const createCustomer = async (customer: any): Promise<any> => {
+//     return await axios.post(`${BASE_URL}/create`, customer);
+// }
 const createCustomer = async (customer: any): Promise<any> => {
     return await axios.post(`${BASE_URL}/create`, customer);
 }
-
 const deleteCustomer = async (customerId: number) => {
     try {
         const response = await axios.delete(`${BASE_URL}/delete/${customerId}`);

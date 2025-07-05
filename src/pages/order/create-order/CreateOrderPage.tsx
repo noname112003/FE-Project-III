@@ -102,10 +102,11 @@ function VariantTableRow({ index, orderDetailList, setOrderDetailList }: Variant
 
 type DialogProps = {
   open: boolean,
-  handleClose: () => void
+  handleClose: () => void,
+  setCustomer: (customer: Customer) => void;
 }
 
-function NewCustomerDialog({ open, handleClose }: DialogProps) {
+function NewCustomerDialog({ open, handleClose, setCustomer }: DialogProps) {
 
   const [name, setName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
@@ -127,12 +128,16 @@ function NewCustomerDialog({ open, handleClose }: DialogProps) {
       birthday: birthday || null,
       gender: gender
     }
-    createCustomer(customer).then((_res) => {
-      toast.success("Thêm khách hàng thành công");
-      handleClose();
-    }).catch((error) => {
-      toast.error(error.response.data);
-    });
+    createCustomer(customer)
+        .then((res) => {
+          const createdCustomer = res.data.data;
+          setCustomer(createdCustomer);
+          toast.success("Thêm khách hàng thành công");
+          handleClose();
+        })
+        .catch((error) => {
+          toast.error(error.response?.data?.message || "Có lỗi xảy ra khi tạo khách hàng");
+        });
   }
 
   return <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
@@ -528,7 +533,7 @@ export default function CreateOrderPage({ }: Props) {
       </Box>
       <CreateOrderAppBar handleCreateOrder={handleCreateOrder} doesCreatingOrder={doesCreatingOrder}/>
       <Box sx={{ backgroundColor: '#F0F1F1', padding: '25px 30px' }} flex={1} display='flex' flexDirection='column'>
-        <NewCustomerDialog open={openAddCustomerDialog} handleClose={() => setOpenAddCustomerDialog(false)} />
+        <NewCustomerDialog setCustomer={setSelectedCustomer} open={openAddCustomerDialog} handleClose={() => setOpenAddCustomerDialog(false)} />
         <Box bgcolor="#fff" borderRadius={1} padding="20px 15px" mb={2}>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body1" sx={{ color: '#000', fontWeight: '600', mb: 2 }}>Thông tin khách hàng</Typography>

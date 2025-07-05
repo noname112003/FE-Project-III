@@ -1120,14 +1120,19 @@ export default function ProductDetail() {
                                                                 id="quantity"
                                                                 name="quantity"
                                                                 value={variant.variantStores && variant?.variantStores[0]?.quantity || 0}
-                                                                onChange={(e) =>
+                                                                onChange={(e) => {
+                                                                    const oldQuantity = variant.variantStores ? variant?.variantStores[0]?.quantity : 0;
+                                                                    if(Number(e.target.value) - oldQuantity > variant?.stock) {
+                                                                        toast.error("Số lượng sản phẩm đã vượt quá số lượng tồn kho tổng");
+                                                                        return;
+                                                                    }
                                                                     handleVariantChange(
                                                                         index,
                                                                         "variantStore",
                                                                         e.target
                                                                             .value
                                                                     )
-                                                                }
+                                                                }}
                                                                 placeholder="Nhập số lượng"
                                                             />
                                                         </Box>

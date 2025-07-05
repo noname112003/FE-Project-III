@@ -180,7 +180,7 @@ export default function AddProduct({}: Props) {
             })
                 .then((_res) => {
                     toast.success("Tạo sản phẩm thành công");
-                    navigate(`/products/${_res.id}`);
+                    navigate(`/warehouse/products/${_res.id}`);
                 })
                 .catch((error) => {
                     toast.error(error.response.data.message);
