@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const apiClients = axios.create({
-    baseURL: 'http://localhost:8080/v1/',  // Đặt base URL cho các API
+    baseURL: 'https://store-manager-ixub.onrender.com/v1/',  // Đặt base URL cho các API
 });
 
 export const getStores = async (userId: number) => {

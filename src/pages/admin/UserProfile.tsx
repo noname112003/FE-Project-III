@@ -53,7 +53,7 @@ const UserProfile: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/v1/user/${id}`);
+        const response = await axios.get(`https://store-manager-ixub.onrender.com/v1/user/${id}`);
         if (response.data.status === "OK") {
           setUser(response.data.data);
         }

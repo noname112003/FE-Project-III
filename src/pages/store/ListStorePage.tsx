@@ -57,7 +57,7 @@ const StoreList: React.FC = () => {
     useEffect(() => {
         const fetchStoresByUser = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/v1/stores/get_list_store?userId=${userId}`);
+                const response = await fetch(`https://store-manager-ixub.onrender.com/v1/stores/get_list_store?userId=${userId}`);
                 if (!response.ok) {
                     const errData = await response.json();
                     throw new Error(errData.message || "Không thể lấy danh sách cửa hàng");
@@ -96,7 +96,7 @@ const StoreList: React.FC = () => {
 
     const handleToggleStatus = async (storeId: number, currentStatus: boolean) => {
         try {
-            const response = await fetch(`http://localhost:8080/v1/stores/${storeId}/status?status=${!currentStatus}`, {
+            const response = await fetch(`https://store-manager-ixub.onrender.com/v1/stores/${storeId}/status?status=${!currentStatus}`, {
                 method: 'PUT'
             });
             if (!response.ok) {

@@ -45,7 +45,7 @@
 // //         }
 // //     }, [store]);
 // //     const updateStore = async (storeId: number, storeData: any) => {
-// //         const response = await fetch(`http://localhost:8080/v1/stores/${storeId}`, {
+// //         const response = await fetch(`https://store-manager-ixub.onrender.com/v1/stores/${storeId}`, {
 // //             method: "PUT",
 // //             headers: {
 // //                 "Content-Type": "application/json",
@@ -67,7 +67,7 @@
 // //     // };
 // //     const handleSave = async () => {
 // //         try {
-// //             // const response = await axios.put(`http://localhost:8080/v1/stores/${store.id}`, formData);
+// //             // const response = await axios.put(`https://store-manager-ixub.onrender.com/v1/stores/${store.id}`, formData);
 // //             // await fetchStores();
 // //             await updateStore(store.id, formData);
 // //             toast.success("Cập nhật thông tin cửa hàng thành công!");
@@ -272,7 +272,7 @@
 //     };
 //
 //     const updateStore = async (storeId: number, storeData: any) => {
-//         const response = await fetch(`http://localhost:8080/v1/stores/${storeId}`, {
+//         const response = await fetch(`https://store-manager-ixub.onrender.com/v1/stores/${storeId}`, {
 //             method: "PUT",
 //             headers: { "Content-Type": "application/json" },
 //             body: JSON.stringify(storeData),
@@ -504,7 +504,7 @@ export default function StoreSetting() {
     };
 
     const updateStore = async (storeId: number, storeData: any) => {
-        const response = await fetch(`http://localhost:8080/v1/stores/${storeId}`, {
+        const response = await fetch(`https://store-manager-ixub.onrender.com/v1/stores/${storeId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(storeData),
@@ -518,7 +518,7 @@ export default function StoreSetting() {
         return response.json();
     };
     const getStoreById = async (storeId: number) => {
-        const response = await fetch(`http://localhost:8080/v1/stores/${storeId}`);
+        const response = await fetch(`https://store-manager-ixub.onrender.com/v1/stores/${storeId}`);
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || "Không thể lấy thông tin cửa hàng");

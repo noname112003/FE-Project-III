@@ -1,7 +1,7 @@
 import axios from 'axios';
 import apiClient from './api-clients';
 
-const BASE_URL = 'http://localhost:8080/v1/orders';
+const BASE_URL = 'https://store-manager-ixub.onrender.com/v1/orders';
 
 const getAllOrders = async (page: number, limit: number, query: string, startDate: string, endDate: string, storeId: number): Promise<any> => {
     try {

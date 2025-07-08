@@ -7,7 +7,7 @@ import {
 } from "../models/ProductInterface";
 import apiClient from "./api-clients";
 
-const BASE_URL = "http://localhost:8080/v1/products";
+const BASE_URL = "https://store-manager-ixub.onrender.com/v1/products";
 
 const LIMIT = 10;
 

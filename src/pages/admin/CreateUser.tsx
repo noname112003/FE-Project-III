@@ -93,7 +93,7 @@ const validatePhoneNumber = (phoneNumber: string): boolean => {
   // const checkPhoneNumber = async () => {
   //   try {
   //     const response = await fetch(
-  //       `http://localhost:8080/v1/user/check-phoneNumber/${formData.phoneNumber}`,
+  //       `https://store-manager-ixub.onrender.com/v1/user/check-phoneNumber/${formData.phoneNumber}`,
   //       {
   //         method: "GET",
   //         headers: {
@@ -183,7 +183,7 @@ const validatePhoneNumber = (phoneNumber: string): boolean => {
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/v1/auth/register?storeId=${store.id}`, {
+      const response = await fetch(`https://store-manager-ixub.onrender.com/v1/auth/register?storeId=${store.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

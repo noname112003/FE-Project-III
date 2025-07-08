@@ -64,7 +64,7 @@ const NewUserProfile = () => {
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/v1/user/${id}`);
+                const response = await fetch(`https://store-manager-ixub.onrender.com/v1/user/${id}`);
                 const { data } = await response.json(); // Fetch the data from the response
 
                 // Prefill form with user details
@@ -190,7 +190,7 @@ const NewUserProfile = () => {
         };
 
         try {
-            const response = await fetch(`http://localhost:8080/v1/user/${id}`, {
+            const response = await fetch(`https://store-manager-ixub.onrender.com/v1/user/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

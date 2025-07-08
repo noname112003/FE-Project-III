@@ -83,7 +83,7 @@ export default function CustomerDetailPage() {
   });
   const fetchCustomerOrders = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/v1/customers/${customerId}/orders?page=${pageNum}&size=${pageSize}`);
+      const response = await fetch(`https://store-manager-ixub.onrender.com/v1/customers/${customerId}/orders?page=${pageNum}&size=${pageSize}`);
 
       if (!response.ok) {
         throw new Error(`Lỗi ${response.status}`);

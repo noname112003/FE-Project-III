@@ -119,7 +119,7 @@ export default function User({}: Props) {
         const searchFilter = debouncedSearchQuery ? `&search=${debouncedSearchQuery}` : "";
         const response = await fetch(
 
-            `http://localhost:8080/v1/user?page=${page}&limit=${pageSize}&sort=${sortColumn}&order=${sortOrder}${roleFilter}${searchFilter}&storeId=${store?.id}`
+            `https://store-manager-ixub.onrender.com/v1/user?page=${page}&limit=${pageSize}&sort=${sortColumn}&order=${sortOrder}${roleFilter}${searchFilter}&storeId=${store?.id}`
 
         );
         const data: ApiResponse = await response.json();

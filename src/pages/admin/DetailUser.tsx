@@ -58,7 +58,7 @@ export default function DetailUser() {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/v1/user/${id}`);
+        const response = await fetch(`https://store-manager-ixub.onrender.com/v1/user/${id}`);
         const jsonResponse = await response.json();
         if (response.ok) {
           setUser(jsonResponse.data);
@@ -89,7 +89,7 @@ export default function DetailUser() {
     // }
     try {
       const response = await fetch(
-        `http://localhost:8080/v1/admin/reset_password/${id}`,
+        `https://store-manager-ixub.onrender.com/v1/admin/reset_password/${id}`,
         {
           method: "PUT",
           // headers: {
@@ -132,7 +132,7 @@ export default function DetailUser() {
     const updatedStatus = !user.status; // Toggle the current status
 
     try {
-      const response = await fetch(`http://localhost:8080/v1/user/${user.id}`, {
+      const response = await fetch(`https://store-manager-ixub.onrender.com/v1/user/${user.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -44,7 +44,7 @@ const LoginPage: React.FC = () => {
     setEmailError(false); // Reset email error if format is valid
 
     try {
-      const response = await axios.post("http://localhost:8080/v1/auth/login", {
+      const response = await axios.post("https://store-manager-ixub.onrender.com/v1/auth/login", {
         email,
         password,
       });

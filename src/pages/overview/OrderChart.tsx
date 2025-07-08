@@ -27,7 +27,7 @@ const OrderChart = () => {
 
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/v1/orders/count-by-day', {
+                const response = await axios.get('https://store-manager-ixub.onrender.com/v1/orders/count-by-day', {
                     params: {
                         storeId: store?.id,  // Bạn có thể thay đổi storeId theo yêu cầu
                         date: currentDate,  // Ngày cần lấy dữ liệu, thay đổi nếu cần

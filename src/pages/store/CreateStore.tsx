@@ -93,7 +93,7 @@
 //         const payload = { ...form };
 //
 //         try {
-//             const response = await fetch("http://localhost:8080/v1/stores", {
+//             const response = await fetch("https://store-manager-ixub.onrender.com/v1/stores", {
 //                 method: "POST",
 //                 headers: {
 //                     "Content-Type": "application/json",
@@ -280,7 +280,7 @@ const CreateStore: React.FC = () => {
         const payload = { ...form };
 
         try {
-            const response = await fetch("http://localhost:8080/v1/stores", {
+            const response = await fetch("https://store-manager-ixub.onrender.com/v1/stores", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

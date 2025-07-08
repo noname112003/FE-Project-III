@@ -20,7 +20,7 @@
 //         setMessage("");
 //         try {
 //             await axios.post(
-//                 "http://localhost:8080/v1/user/reset-password", // URL gốc
+//                 "https://store-manager-ixub.onrender.com/v1/user/reset-password", // URL gốc
 //                 null, // Không truyền body
 //                 {
 //                     params: { email }, // Truyền email dưới dạng query parameters
@@ -106,7 +106,7 @@ const ForgotPasswordPage: React.FC = () => {
 
         try {
             await axios.post(
-                "http://localhost:8080/v1/user/reset-password",
+                "https://store-manager-ixub.onrender.com/v1/user/reset-password",
                 null, // body = null
                 {
                     params: {

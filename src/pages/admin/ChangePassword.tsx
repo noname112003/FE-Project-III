@@ -55,7 +55,7 @@ const ChangePassword: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/v1/user/change_password/${id}`,
+        `https://store-manager-ixub.onrender.com/v1/user/change_password/${id}`,
         {
           method: "PUT",
           headers: {
