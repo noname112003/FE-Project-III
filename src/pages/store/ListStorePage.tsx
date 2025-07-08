@@ -15,6 +15,10 @@ import MainBox from "../../components/layout/MainBox.tsx";
 
 import {useNavigate} from "react-router-dom";
 import {Add} from "@mui/icons-material";
+import {getStoresV2} from "../../services/storeAPI.ts";
+import {setStores} from "../../reducers/storesReducer.tsx";
+import {useDispatch} from "react-redux";
+import {toast} from "react-toastify";
 // export const IconBtnAddV2 = () => (
 //     <svg
 //         width="16"
@@ -43,12 +47,13 @@ interface Store {
 }
 
 const StoreList: React.FC = () => {
-    const [stores, setStores] = useState<Store[]>([]);
+    const [listStores, setListStores] = useState<Store[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
     const navigate = useNavigate();
     const userId = JSON.parse(localStorage.getItem("user") || "{}").id;
-
+    const dispatch = useDispatch();
+    // const store = useSelector((state: any) => state.storeSetting.store);
     useEffect(() => {
         const fetchStoresByUser = async () => {
             try {
@@ -58,8 +63,8 @@ const StoreList: React.FC = () => {
                     throw new Error(errData.message || "Không thể lấy danh sách cửa hàng");
                 }
                 const data = await response.json();
-                localStorage.setItem("stores", JSON.stringify(data))
-                setStores(data);
+                // localStorage.setItem("stores", JSON.stringify(data))
+                setListStores(data);
             } catch (err: any) {
                 setError(err.message || "Đã xảy ra lỗi.");
             } finally {
@@ -70,13 +75,60 @@ const StoreList: React.FC = () => {
         fetchStoresByUser();
     }, [userId]);
 
-    const renderStatusChip = (status: boolean) => {
-        if (status) {
-            return <Chip label="Đang hoạt động" color="success" />;
-        } else {
-            return <Chip label="Không hoạt động" color="error" />;
+    // const renderStatusChip = (status: boolean) => {
+    //     if (status) {
+    //         return <Chip label="Đang hoạt động" color="success" />;
+    //     } else {
+    //         return <Chip label="Không hoạt động" color="error" />;
+    //     }
+    // };
+    const renderStatusChip = (store: Store) => {
+        const { status, id } = store;
+        return (
+            <Chip
+                label={status ? "Đang hoạt động" : "Không hoạt động"}
+                color={status ? "success" : "error"}
+                onClick={() => handleToggleStatus(id, status)}
+                sx={{ cursor: "pointer" }}
+            />
+        );
+    };
+
+    const handleToggleStatus = async (storeId: number, currentStatus: boolean) => {
+        try {
+            const response = await fetch(`http://localhost:8080/v1/stores/${storeId}/status?status=${!currentStatus}`, {
+                method: 'PUT'
+            });
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || "Không thể cập nhật trạng thái cửa hàng");
+            }
+
+            // Cập nhật lại danh sách store tại local
+            setListStores(prevStores =>
+                prevStores.map(store =>
+                    store.id === storeId ? { ...store, status: !currentStatus } : store
+                )
+            );
+            const storesData = await getStoresV2(userId, true);  // Gọi API getStores với userId
+            localStorage.setItem("stores", JSON.stringify(storesData));
+            dispatch(setStores(storesData));
+
+            // const currentStore = JSON.parse(localStorage.getItem("storze") || "{}"); // hoặc từ useSelector
+            // if (currentStore?.id === storeId && currentStatus) {
+            //     const newStore = storesData.length > 0 ? storesData[0] : null;
+            //     if (newStore) {
+            //         dispatch(setStore(newStore));
+            //         localStorage.setItem("store", JSON.stringify(newStore));
+            //     }
+            // }
+            toast.success(`Cập nhật trạng thái thành công!`);
+        } catch (err: any) {
+            setError(err.message || "Đã xảy ra lỗi khi cập nhật trạng thái.");
+            toast.error("Lỗi khi cập nhật trạng thái!");
         }
     };
+
 
     return (
         <Box>
@@ -117,7 +169,7 @@ const StoreList: React.FC = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {stores.map((store) => (
+                                {listStores.map((store) => (
                                     <TableRow
                                         key={store.id}
                                         sx={{// Hover effect
@@ -131,7 +183,7 @@ const StoreList: React.FC = () => {
                                                 .join(', ')}
                                         </TableCell>
                                         <TableCell>{store.phone}</TableCell>
-                                        <TableCell align="center">{renderStatusChip(store.status)}</TableCell>
+                                        <TableCell align="center">{renderStatusChip(store)}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

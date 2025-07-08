@@ -5,7 +5,7 @@ import { ComponentLeftLogin } from "./ComponentLeftLogin.tsx";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/userAPI.ts";
 import {Alert} from "@mui/material";
-import { getStores } from "../../services/storeAPI.ts";
+import {getStoresV2} from "../../services/storeAPI.ts";
 import { setStores } from "../../reducers/storesReducer.tsx";
 import { useDispatch } from "react-redux";
 import { setStore } from "../../reducers/storeSettingReducer.tsx";
@@ -43,7 +43,7 @@ const Login = () => {
                     })
                 );
 
-                const storesData = await getStores(data.data.id);  // Gọi API getStores với userId
+                const storesData = await getStoresV2(data.data.id, true);  // Gọi API getStores với userId
                 localStorage.setItem("stores", JSON.stringify(storesData));
                 dispatch(setStores(storesData));
 
@@ -81,7 +81,7 @@ const Login = () => {
                     })
                 );
 
-                const storesData = await getStores(data.data.id);  // Gọi API getStores với userId
+                const storesData = await getStoresV2(data.data.id, true);  // Gọi API getStores với userId
                 localStorage.setItem("stores", JSON.stringify(storesData));
                 dispatch(setStores(storesData));
 
