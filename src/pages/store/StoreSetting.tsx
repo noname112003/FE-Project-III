@@ -531,7 +531,7 @@ export default function StoreSetting() {
             const updatedStore = await getStoreById(store.id);
             dispatch(setStore(updatedStore));
             dispatch(setStores(
-                stores.map(s => s.id === updatedStore.id ? updatedStore : s)
+                stores.map((s: { id: number }) => s.id === updatedStore.id ? updatedStore : s)
             ));
             toast.success("Cập nhật thông tin cửa hàng thành công!");
         } catch (error) {
